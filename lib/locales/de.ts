@@ -28,7 +28,7 @@ export const de: Translations = {
   status: {
     sectionLabel: "Status",
     available: "Verfügbar",
-    availableDetail: "Offen für backend-nahe Software-Rollen · Bengaluru / Remote",
+    availableDetail: "Bengaluru / Remote",
     experience: "6+ Jahre",
     experienceDetail: "Produktions-Backend · 4 Firmen · 2 Länder",
     blog: "Blog",
@@ -36,7 +36,7 @@ export const de: Translations = {
     workingLabel: "Wahrscheinlich am Arbeiten",
     coffeeLabel: "Wahrscheinlich in einer Kaffeepause",
     lunchLabel: "Wahrscheinlich beim Mittagessen",
-    availableLabel: "Offen für backend-nahe Software-Rollen",
+    availableLabel: "Verfügbar",
     cs2Label: "Wahrscheinlich spiele ich CS2",
     overwatchLabel: "Wahrscheinlich spiele ich Overwatch",
     learningLabel: "Lese wieder die Doku",
@@ -56,7 +56,7 @@ export const de: Translations = {
     scheduleWeekdayWork: "Werktage 09:00-09:30, 10:00-12:00 und 13:00-17:00 - Wahrscheinlich am Arbeiten",
     scheduleCoffee: "Werktage 09:30-10:00 - Wahrscheinlich in einer Kaffeepause",
     scheduleLunch: "Werktage 12:00-13:00 - Wahrscheinlich beim Mittagessen",
-    scheduleAvailability: "Früher Morgen und früher Abend an Werktagen - Offen für backend-nahe Software-Rollen",
+    scheduleAvailability: "Früher Morgen und früher Abend an Werktagen - Verfügbar",
     scheduleSleeping: "Spät nachts nach 00:00 und vor 07:00 - Schlafen",
     scheduleWeekend: "Am Wochenende gilt kein Büro-Zeitplan, sondern ein lockerer Ablauf",
     scheduleHoliday: "Indische Feiertage und markierte Feiertage zeigen automatisch Urlaub an",
@@ -87,7 +87,7 @@ export const de: Translations = {
     bullet2:
       "Der Großteil meiner Arbeit lag bei Backend-Architektur, Datenzugriff, Service-Zuverlässigkeit und Produktfeatures, die sich in Production bewähren müssen.",
     bullet3:
-      "Ich habe 3 Jahre bei SAP in Deutschland an Enterprise-Software für europäische Kunden gearbeitet. Heute bin ich in Bengaluru und offen für backend-nahe Software-Rollen.",
+      "Ich habe 3 Jahre bei SAP in Deutschland an Enterprise-Software für europäische Kunden gearbeitet. Heute bin ich in Bengaluru.",
     bullet4:
       "Außerhalb der Arbeit verbringe ich Zeit mit Gaming, lese über Systeme und optimiere gelegentlich Dinge tiefer, als es eigentlich nötig wäre.",
     getInTouch: "Kontakt aufnehmen",
@@ -235,6 +235,8 @@ export const de: Translations = {
     github_hunter_desc: "Das GitHub-Profil geöffnet.",
     mail_sender_title: "Kontakt aufnehmen",
     mail_sender_desc: "Auf eine E-Mail oder einen Kontakt-Link geklickt.",
+    resume_downloader_title: "Papierspur",
+    resume_downloader_desc: "Den Lebenslauf heruntergeladen.",
     full_profile_title: "Volle Aufklärung",
     full_profile_desc: "8 oder mehr Trophäen freigeschaltet.",
     locked: "Gesperrt",

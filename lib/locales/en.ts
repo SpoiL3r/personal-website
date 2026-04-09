@@ -28,7 +28,7 @@ export const en: Translations = {
   status: {
     sectionLabel: "Status",
     available: "Available",
-    availableDetail: "Open to backend-leaning software roles · Bengaluru / Remote",
+    availableDetail: "Bengaluru / Remote",
     experience: "6+ Years",
     experienceDetail: "Production backend · 4 companies · 2 countries",
     blog: "Blog",
@@ -36,7 +36,7 @@ export const en: Translations = {
     workingLabel: "Probably working",
     coffeeLabel: "Probably on a coffee break",
     lunchLabel: "Probably having lunch",
-    availableLabel: "Open to backend-leaning software roles",
+    availableLabel: "Available",
     cs2Label: "Probably playing CS2",
     overwatchLabel: "Probably playing Overwatch",
     learningLabel: "Reading the docs (again)",
@@ -56,7 +56,7 @@ export const en: Translations = {
     scheduleWeekdayWork: "Weekdays 09:00-09:30, 10:00-12:00 and 13:00-17:00 - Probably working",
     scheduleCoffee: "Weekdays 09:30-10:00 - Probably on a coffee break",
     scheduleLunch: "Weekdays 12:00-13:00 - Probably having lunch",
-    scheduleAvailability: "Weekdays early morning and early evening - Open to backend-leaning software roles",
+    scheduleAvailability: "Weekdays early morning and early evening - Available",
     scheduleSleeping: "Late night after 00:00 and before 07:00 - Sleeping",
     scheduleWeekend: "Weekends ignore office schedule and use relaxed status flow",
     scheduleHoliday: "India public holidays and marked holidays show Vacation automatically",
@@ -87,7 +87,7 @@ export const en: Translations = {
     bullet2:
       "Most of my work has been around backend architecture, data access, service reliability, and product features that need to hold up in production.",
     bullet3:
-      "I spent 3 years at SAP in Germany working on enterprise software for European customers. I am now based in Bengaluru and open to backend-leaning software roles.",
+      "I spent 3 years at SAP in Germany working on enterprise software for European customers. I am now based in Bengaluru.",
     bullet4:
       "Outside work I spend time gaming, reading about systems, and occasionally going too deep on things that did not need that much optimization.",
     getInTouch: "Get in Touch",
@@ -235,6 +235,8 @@ export const en: Translations = {
     github_hunter_desc: "Opened the GitHub profile.",
     mail_sender_title: "Reach Out",
     mail_sender_desc: "Clicked an email or Contact link.",
+    resume_downloader_title: "Paper Trail",
+    resume_downloader_desc: "Downloaded the resume.",
     full_profile_title: "Complete Recon",
     full_profile_desc: "Unlocked 8 or more trophies.",
     locked: "Locked",

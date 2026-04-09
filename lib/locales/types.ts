@@ -243,6 +243,8 @@ export interface Translations {
     github_hunter_desc: string;
     mail_sender_title: string;
     mail_sender_desc: string;
+    resume_downloader_title: string;
+    resume_downloader_desc: string;
     full_profile_title: string;
     full_profile_desc: string;
     locked: string;

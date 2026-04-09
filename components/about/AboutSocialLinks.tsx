@@ -1,7 +1,7 @@
 "use client";
 
 import type { ElementType } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Download } from "lucide-react";
 import { FaDiscord, FaGithub, FaLinkedin, FaSteam } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { useLocale } from "@/lib/contexts/LocaleContext";
@@ -38,6 +38,20 @@ export default function AboutSocialLinks({
 
   return (
     <div className={styles.socialRow}>
+      <a
+        href="/resume.pdf"
+        download="Vaibhav_Singh_Resume.pdf"
+        className={styles.socialLink}
+        onClick={() => unlock("resume_downloader")}
+      >
+        <div className={styles.socialPill}>
+          <span className={styles.socialIconWrap} style={{ background: "#0f766e" }}>
+            <Download style={{ color: "#ffffff", fontSize: "0.8rem" }} size={13} />
+          </span>
+          <span className={styles.socialLabel}>Resume</span>
+          <Download size={12} style={{ color: "var(--text-dim)" }} />
+        </div>
+      </a>
       {socials.map(({ icon: Icon, label, href, bg, color, trophyId, onClick }) => {
         const pill = (
           <div className={styles.socialPill}>
