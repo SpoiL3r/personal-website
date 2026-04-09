@@ -39,11 +39,14 @@ export const metadata: Metadata = {
   title: "Vaibhav Singh · Software Engineer",
   description:
     "Software Engineer with 6+ years building distributed systems and cloud-native applications. Currently at SAP Labs India.",
+  metadataBase: new URL("https://vaibhav-singh.in"),
   openGraph: {
     title: "Vaibhav Singh · Software Engineer",
     description:
       "Software Engineer with 6+ years building distributed systems and cloud-native applications. Currently at SAP Labs India.",
     type: "website",
+    url: "https://vaibhav-singh.in",
+    siteName: "Vaibhav Singh",
     locale: "en_US",
   },
   twitter: {

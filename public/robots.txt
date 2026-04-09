@@ -3,3 +3,5 @@ Allow: /
 
 # Block API routes from indexing
 Disallow: /api/
+
+Sitemap: https://vaibhav-singh.in/sitemap.xml
