@@ -860,6 +860,7 @@ header[role], header {
   .profile-spacer { display: none !important; }
   .nav-locale-desktop { display: none !important; }
   .nav-controls { margin-left: auto; }
+  .trophy-hud-wrap { display: none !important; }
 
   .home-hero {
     padding-top: 5.5rem !important;
