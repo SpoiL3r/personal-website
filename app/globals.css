@@ -153,6 +153,15 @@ body::after {
   view-transition-name: none;
 }
 
+/* Hide fixed overlays until JS hydrates — prevents flash on pull-to-refresh */
+.trophy-hud-wrap {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+html.hydrated .trophy-hud-wrap {
+  opacity: 1;
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
