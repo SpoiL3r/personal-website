@@ -39,7 +39,7 @@ export default function AboutSocialLinks({
   return (
     <div className={styles.socialRow}>
       <a
-        href="/resume.pdf"
+        href="/vaibhav_singh_cv.pdf"
         download="Vaibhav_Singh_Resume.pdf"
         className={styles.socialLink}
         onClick={() => unlock("resume_downloader")}
