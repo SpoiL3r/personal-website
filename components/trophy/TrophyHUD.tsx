@@ -13,7 +13,10 @@ export default function TrophyHUD() {
   const { unlockedIds, progress, total } = useTrophies();
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const pct = total > 0 ? progress / total : 0;
   const dash = RING_CIRC * pct;
@@ -28,6 +31,8 @@ export default function TrophyHUD() {
     if (open) document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
+
+  if (!mounted) return null;
 
   return (
     <div ref={containerRef} style={{ position: "relative" }}>
