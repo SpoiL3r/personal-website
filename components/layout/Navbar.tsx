@@ -333,7 +333,7 @@ export default function Navbar() {
             <Download size={13} />
             <span className="nav-resume-label">{t.contact.downloadResume}</span>
           </a>
-          <LocaleToggle />
+          <span className="nav-locale-desktop"><LocaleToggle /></span>
           <ThemeToggle />
           {/* Hamburger — mobile only */}
           <button
@@ -403,6 +403,19 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            <div style={{ borderTop: "1px solid var(--border)", marginTop: "0.5rem", paddingTop: "0.75rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <LocaleToggle />
+              <a
+                href="/vaibhav_singh_cv.pdf"
+                download="Vaibhav_Singh_Resume.pdf"
+                className="btn btn-outline"
+                style={{ fontSize: "0.78rem", padding: "0.3rem 0.75rem", height: "32px", display: "inline-flex", alignItems: "center", gap: "0.35rem" }}
+                onClick={() => setMobileOpen(false)}
+              >
+                <Download size={13} />
+                {t.contact.downloadResume}
+              </a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
