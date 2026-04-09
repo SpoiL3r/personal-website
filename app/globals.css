@@ -843,6 +843,7 @@ header[role], header {
   .nav-resume-btn { display: none !important; }
   .nav-hamburger { display: flex !important; }
   .profile-spacer { display: none !important; }
+  .nav-locale-desktop { display: none !important; }
 
   .home-hero {
     padding-top: 5.5rem !important;
