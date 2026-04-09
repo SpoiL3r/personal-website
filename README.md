@@ -3,10 +3,13 @@
 Personal portfolio of **Vaibhav Singh** - Software Engineer at SAP Labs India.
 
 [![Live](https://img.shields.io/badge/live-vaibhav--singh.in-6366f1?style=flat-square)](https://vaibhav-singh.in)
+[![Vercel](https://img.shields.io/github/deployments/SpoiL3r/personal-website/production?label=vercel&logo=vercel&style=flat-square)](https://vercel.com/spoil3rs-projects/personal-website)
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Deployed on Vercel](https://img.shields.io/badge/deployed_on-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12-ff0055?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion)
+[![License: MIT](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](LICENSE)
 
 ---
 
