@@ -22,8 +22,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Download } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion";
+import { Download, Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import LocaleToggle from "@/components/locale/LocaleToggle";
 import { useLocale } from "@/lib/contexts/LocaleContext";
@@ -67,6 +67,7 @@ export default function Navbar() {
   const router = useRouter();
   const { t } = useLocale();
   const [activeId, setActiveId] = useState<string>("home");
+  const [mobileOpen, setMobileOpen] = useState(false);
   // When the user clicks a nav item we lock the active state for ~600ms so the
   // scroll-spy doesn't paint every section the scroll passes through.
   const isLocked = useRef(false);
@@ -150,6 +151,14 @@ export default function Navbar() {
     };
   }, [pathname]);
 
+  // Close mobile menu on scroll
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function onScroll() { setMobileOpen(false); }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [mobileOpen]);
+
   /** Returns true when a nav item should be rendered in its active state. */
   function isActive(item: NavItem) {
     if (item.target.startsWith("/")) {
@@ -175,6 +184,9 @@ export default function Navbar() {
     void linkEl.offsetWidth; // trigger reflow
     linkEl.classList.add("bounce");
     window.setTimeout(() => linkEl.classList.remove("bounce"), 450);
+
+    // Close mobile menu
+    setMobileOpen(false);
 
     // Absolute route — let Next.js handle navigation normally.
     if (item.target.startsWith("/")) return;
@@ -275,7 +287,7 @@ export default function Navbar() {
         {/* Spacer matching fixed profile-status width so nav links stay centered */}
         <div style={{ width: "180px", flexShrink: 0 }} className="profile-spacer" />
 
-        {/* Nav — clean underline animation, no morphing pill */}
+        {/* Desktop nav */}
         <nav
           className="nav-main"
           style={{
@@ -303,11 +315,11 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right controls — Resume on its own, then a divider, then prefs at the very end */}
+        {/* Right controls */}
         <div className="nav-controls" style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
           <a
-            href="/resume.pdf"
-            download
+            href="/vaibhav_singh_cv.pdf"
+            download="Vaibhav_Singh_Resume.pdf"
             className="btn btn-outline nav-resume-btn"
             style={{
               fontSize: "0.78rem",
@@ -323,8 +335,77 @@ export default function Navbar() {
           </a>
           <LocaleToggle />
           <ThemeToggle />
+          {/* Hamburger — mobile only */}
+          <button
+            className="nav-hamburger"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMobileOpen(v => !v)}
+            style={{
+              display: "none",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--text)",
+              padding: "0.25rem",
+              borderRadius: "6px",
+              flexShrink: 0,
+            }}
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{
+              position: "absolute",
+              top: "56px",
+              left: 0,
+              right: 0,
+              background: "var(--bg-card)",
+              borderBottom: "1px solid var(--border)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              zIndex: 49,
+              padding: "0.75rem 1rem 1rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.25rem",
+            }}
+          >
+            {NAV.map(item => {
+              const active = isActive(item);
+              return (
+                <Link
+                  key={item.target}
+                  href={hrefFor(item)}
+                  onClick={e => handleClick(e, item)}
+                  style={{
+                    padding: "0.6rem 0.75rem",
+                    borderRadius: "8px",
+                    fontSize: "0.92rem",
+                    fontWeight: active ? 600 : 400,
+                    color: active ? "var(--accent)" : "var(--text)",
+                    background: active ? "var(--bg-hover)" : "transparent",
+                    textDecoration: "none",
+                    transition: "background 0.15s, color 0.15s",
+                  }}
+                >
+                  {t.nav[item.labelKey]}
+                </Link>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

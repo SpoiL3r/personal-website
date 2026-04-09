@@ -838,6 +838,12 @@ header[role], header {
 }
 
 @media (max-width: 640px) {
+  /* Switch to hamburger menu on mobile */
+  .nav-main { display: none !important; }
+  .nav-resume-btn { display: none !important; }
+  .nav-hamburger { display: flex !important; }
+  .profile-spacer { display: none !important; }
+
   .home-hero {
     padding-top: 5.5rem !important;
     padding-bottom: 2.75rem !important;
@@ -845,10 +851,6 @@ header[role], header {
   .hero-badges {
     margin-top: 1.25rem !important;
     gap: 0.4rem !important;
-  }
-  .nav-link-v2 {
-    font-size: 0.78rem;
-    padding: 0.4rem 0.45rem;
   }
 }
 

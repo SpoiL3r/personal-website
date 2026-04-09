@@ -8,14 +8,24 @@ import type { Job } from "@/lib/data/experience";
 
 export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
   const [hovered, setHovered] = useState<string | null>(null);
+  const [touched, setTouched] = useState<string | null>(null);
+
+  // On touch devices, tapping a row toggles the tags
+  function handleTap(company: string) {
+    setTouched(prev => (prev === company ? null : company));
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      {jobs.map((exp, idx) => (
+      {jobs.map((exp, idx) => {
+        const tagsVisible = hovered === exp.company || touched === exp.company;
+        return (
         <motion.div
           key={exp.company}
           className="exp-row"
           onHoverStart={() => setHovered(exp.company)}
           onHoverEnd={() => setHovered(h => (h === exp.company ? null : h))}
+          onTap={() => handleTap(exp.company)}
           initial={{ opacity: 0, x: -16 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-40px" }}
@@ -125,7 +135,7 @@ export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
             {exp.tags && exp.tags.length > 0 && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "0.75rem", minHeight: "1.5rem" }}>
                 <AnimatePresence>
-                  {hovered === exp.company &&
+                  {tagsVisible &&
                     exp.tags.map((tag, ti) => (
                       <motion.span
                         key={tag}
@@ -142,7 +152,8 @@ export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
             )}
           </div>
         </motion.div>
-      ))}
+        );
+      })}
     </div>
   );
 }
