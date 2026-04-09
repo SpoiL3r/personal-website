@@ -147,6 +147,12 @@ body::after {
 ::view-transition-old(root) { z-index: 1; }
 ::view-transition-new(root) { z-index: 9999; }
 
+/* Keep fixed overlays out of the view transition so they don't flash */
+.trophy-hud-wrap,
+.profile-status-wrap {
+  view-transition-name: none;
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
