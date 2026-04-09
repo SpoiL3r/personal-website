@@ -35,6 +35,7 @@ export type TrophyTitleKey = keyof Pick<
   | "linkedin_stalker_title"
   | "github_hunter_title"
   | "mail_sender_title"
+  | "resume_downloader_title"
   | "full_profile_title"
 >;
 
@@ -54,6 +55,7 @@ export type TrophyDescKey = keyof Pick<
   | "linkedin_stalker_desc"
   | "github_hunter_desc"
   | "mail_sender_desc"
+  | "resume_downloader_desc"
   | "full_profile_desc"
 >;
 
@@ -134,6 +136,12 @@ export const TROPHIES: Trophy[] = [
     descKey: "mail_sender_desc",
   },
   {
+    id: "resume_downloader",
+    icon: "📄",
+    titleKey: "resume_downloader_title",
+    descKey: "resume_downloader_desc",
+  },
+  {
     id: "full_profile",
     icon: "🏅",
     titleKey: "full_profile_title",
@@ -147,4 +155,4 @@ export const TROPHIES: Trophy[] = [
  *
  * Checked inside `TrophyContext.unlock` after every unlock event.
  */
-export const FULL_PROFILE_THRESHOLD = 8;
+export const FULL_PROFILE_THRESHOLD = 9;

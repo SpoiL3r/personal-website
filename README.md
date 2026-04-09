@@ -1,20 +1,27 @@
-# vaibhav.dev — Personal Website
+# vaibhav-singh.in
 
-Personal portfolio for **Vaibhav Singh**, SDE 2 at SAP Labs India.
+Personal portfolio of **Vaibhav Singh** - Software Engineer at SAP Labs India.
 
-Built with Next.js 16 App Router, TypeScript, Tailwind CSS v4, and Framer Motion.
+[![Live](https://img.shields.io/badge/live-vaibhav--singh.in-6366f1?style=flat-square)](https://vaibhav-singh.in)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Deployed on Vercel](https://img.shields.io/badge/deployed_on-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
 
 ---
 
 ## Features
 
-- **Live presence widget** — IST-based auto status (working / coffee / lunch / gaming / sleeping) with manual override and India public holiday detection
-- **Chess stats** — live ratings from Lichess + Chess.com; top openings aggregated from last 300 rated games
-- **Gaming stats** — Steam playtime via API; manual entries for games without public APIs
-- **Trophy system** — 10 unlockable achievements tracked in localStorage, platinum celebration on completion
-- **i18n** — English, Hindi, German with full type-safe translation coverage
-- **Visitor flags** — country-flag strip from server-side IP geolocation
-- **Dark / light mode** — IntelliJ-dark palette and a slate light mode, with audio feedback on toggle
+| Feature | Description |
+|---|---|
+| Live presence widget | IST-based auto status (working / coffee / lunch / gaming / sleeping) with manual override and India public holiday detection |
+| Chess stats | Live ratings from Lichess + Chess.com with top openings aggregated from last 300 rated games |
+| Gaming stats | Steam playtime via API with tier labels; manual entries for games without public APIs |
+| Trophy system | 11 unlockable achievements tracked in localStorage, platinum celebration on completion |
+| i18n | English, Hindi, German with full type-safe translation coverage |
+| Visitor flags | Country-flag strip from server-side IP geolocation |
+| Resume download | Direct PDF download with trophy unlock |
+| Dark / light mode | IntelliJ-dark palette and a slate light mode, with audio feedback on toggle |
 
 ---
 
@@ -29,6 +36,7 @@ Built with Next.js 16 App Router, TypeScript, Tailwind CSS v4, and Framer Motion
 | Theming | next-themes |
 | Icons | lucide-react, react-icons |
 | Runtime | React 19 |
+| Deployment | Vercel |
 
 ---
 
@@ -37,12 +45,12 @@ Built with Next.js 16 App Router, TypeScript, Tailwind CSS v4, and Framer Motion
 ### Prerequisites
 
 - Node.js 20+
-- npm / pnpm / yarn
+- npm
 
 ### Setup
 
 ```bash
-git clone https://github.com/vaibhavsingh97/personal-website.git
+git clone https://github.com/SpoiL3r/personal-website.git
 cd personal-website
 npm install
 ```
@@ -65,13 +73,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Environment Variables
 
-See `.env.example` for the full list. Required for full functionality:
+| Variable | Purpose | Required |
+|---|---|---|
+| `STEAM_API_KEY` | Steam Web API key - powers gaming stats | Yes |
+| `STEAM_ID` | Your Steam 64-bit user ID | Yes |
+| `VISITOR_DEV_COUNTRY` | ISO-3166 code used as visitor country in local dev (defaults to `IN`) | No |
 
-| Variable | Purpose |
-|---|---|
-| `STEAM_API_KEY` | Steam Web API key — powers gaming stats |
-| `STEAM_ID` | Your Steam 64-bit user ID |
-| `VISITOR_DEV_COUNTRY` | ISO-3166 code used as visitor country in local dev (defaults to `IN`) |
+Get your Steam API key at [steamcommunity.com/dev/apikey](https://steamcommunity.com/dev/apikey).
+Find your Steam64 ID at [steamidfinder.com](https://steamidfinder.com).
 
 Without `STEAM_API_KEY` / `STEAM_ID` the gaming card shows its error fallback. Everything else works without env vars.
 
@@ -80,61 +89,68 @@ Without `STEAM_API_KEY` / `STEAM_ID` the gaming card shows its error fallback. E
 ## Project Structure
 
 ```
-app/                    # Next.js App Router pages + API routes
-├── api/
-│   ├── chess-stats/    # Lichess + Chess.com proxy + opening aggregation
-│   ├── gaming-stats/   # Steam API + manual game entries
-│   ├── holidays/       # India public holidays (Nager.Date + RBI scrape)
-│   └── visitors/       # IP geolocation → country code store
+app/                        # Next.js App Router pages + API routes
+- api/
+  - chess-stats/            # Lichess + Chess.com proxy + opening aggregation
+  - gaming-stats/           # Steam API + manual game entries
+  - holidays/               # India public holidays (Nager.Date + RBI scrape)
+  - visitors/               # IP geolocation -> country code store
 components/
-├── layout/             # Navbar, Footer, ProfileStatus, ThemeToggle, VisitorFlags
-├── sections/           # Page-level content sections
-├── cards/              # ChessCard, GamingCard
-├── home/               # HomeHero, SystemKnowledge
-├── about/              # About section sub-components
-├── trophy/             # TrophyHUD, TrophyDropdown, PlatinumCelebration
-├── locale/             # LocaleToggle (EN / HI / DE)
-└── ui/                 # AnimateIn, ErrorBoundary, Tag, TerminalWindow, etc.
+- layout/                   # Navbar, Footer, ProfileStatus, StatusPanel, ThemeToggle, VisitorFlags
+- sections/                 # Page-level content sections
+- cards/                    # ChessCard, GamingCard
+- home/                     # HomeHero, SystemKnowledge
+- about/                    # About section sub-components
+- trophy/                   # TrophyHUD, TrophyDropdown, PlatinumCelebration
+- locale/                   # LocaleToggle (EN / HI / DE)
+- ui/                       # AnimateIn, ErrorBoundary, Tag, TerminalWindow, etc.
 lib/
-├── contexts/           # LocaleContext, TrophyContext
-├── hooks/              # useProfileStatus, useChessStats, useFetchData
-├── data/               # experience.ts, trophies.ts, techStack.ts
-└── locales/            # en.ts, hi.ts, de.ts + Translations interface
+- contexts/                 # LocaleContext, TrophyContext
+- hooks/                    # useProfileStatus, useChessStats, useFetchData
+- data/                     # experience.ts, trophies.ts, techStack.ts
+- locales/                  # en.ts, hi.ts, de.ts + Translations interface
 docs/
-└── DESIGN.md           # Architecture reference
+- DESIGN.md                 # Architecture reference
 ```
 
 Full architecture details in [`docs/DESIGN.md`](docs/DESIGN.md).
 
 ---
 
-## Deployment
-
-The site is designed to deploy on **Vercel**.
-
-1. Push to GitHub
-2. Import into Vercel
-3. Set environment variables in the Vercel dashboard (`STEAM_API_KEY`, `STEAM_ID`)
-4. Deploy
-
-> **Note:** The visitor country store uses a local JSON file (`data/visitors.json`) that falls back to in-memory on serverless. For persistent visitor tracking across deployments, swap in Upstash Redis or Vercel KV (see `app/api/visitors/route.ts`).
-
----
-
 ## Adding Content
 
 ### New experience entry
-Edit `lib/data/experience.ts` — add to `EXPERIENCE` array following the `Job` interface.
+
+Edit [lib/data/experience.ts](lib/data/experience.ts) and add to the `EXPERIENCE` array following the `Job` interface.
 
 ### New translation key
-1. Add to `lib/locales/types.ts`
-2. Add to `lib/locales/en.ts`, `hi.ts`, `de.ts`
+
+1. Add to [lib/locales/types.ts](lib/locales/types.ts)
+2. Add to `en.ts`, `hi.ts`, `de.ts`
 3. Use via `const { t } = useLocale(); t.<namespace>.<key>`
 
 ### New trophy
-1. Add entry to `lib/data/trophies.ts`
+
+1. Add entry to [lib/data/trophies.ts](lib/data/trophies.ts)
 2. Add title + description keys to all locale files
 3. Call `unlock("your_id")` from the relevant component
+
+---
+
+## Deployment
+
+Deployed on **Vercel** with automatic deployments on every merge to `main`.
+
+Branch protection is enabled - all changes must go through a pull request.
+
+### Deploy your own
+
+1. Fork the repo
+2. Import into Vercel
+3. Set `STEAM_API_KEY` and `STEAM_ID` environment variables
+4. Deploy
+
+> **Note:** The visitor country store uses a local JSON file (`data/visitors.json`) that falls back to in-memory on serverless. For persistent visitor tracking across deployments, swap in Upstash Redis or Vercel KV (see `app/api/visitors/route.ts`).
 
 ---
 
