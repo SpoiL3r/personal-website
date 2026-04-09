@@ -844,6 +844,7 @@ header[role], header {
   .nav-hamburger { display: flex !important; }
   .profile-spacer { display: none !important; }
   .nav-locale-desktop { display: none !important; }
+  .nav-controls { margin-left: auto; }
 
   .home-hero {
     padding-top: 5.5rem !important;
