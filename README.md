@@ -1,15 +1,20 @@
-# vaibhav-singh.in
+<h1 align="center">vaibhav-singh.in</h1>
 
-Personal portfolio of **Vaibhav Singh** - Software Engineer at SAP Labs India.
+<p align="center">Personal portfolio of <strong>Vaibhav Singh</strong> - Software Engineer at SAP Labs India.</p>
 
-[![Live](https://img.shields.io/badge/live-vaibhav--singh.in-6366f1?style=flat-square)](https://vaibhav-singh.in)
-[![Vercel](https://img.shields.io/github/deployments/SpoiL3r/personal-website/production?label=vercel&logo=vercel&style=flat-square)](https://vercel.com/spoil3rs-projects/personal-website)
-[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react&logoColor=black)](https://react.dev)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12-ff0055?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion)
-[![License: MIT](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](LICENSE)
+<p align="center">
+  <a href="https://vaibhav-singh.in"><img src="https://img.shields.io/badge/live-vaibhav--singh.in-6366f1?style=flat-square" alt="Live" /></a>
+  <a href="https://vercel.com/spoil3rs-projects/personal-website"><img src="https://img.shields.io/github/deployments/SpoiL3r/personal-website/production?label=vercel&logo=vercel&style=flat-square" alt="Vercel" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-22c55e?style=flat-square" alt="License: MIT" /></a>
+</p>
+
+<p align="center">
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js" alt="Next.js" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react&logoColor=black" alt="React" /></a>
+  <a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://www.framer.com/motion"><img src="https://img.shields.io/badge/Framer_Motion-12-ff0055?style=flat-square&logo=framer&logoColor=white" alt="Framer Motion" /></a>
+</p>
 
 ---
 
