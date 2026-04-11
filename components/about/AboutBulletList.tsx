@@ -15,7 +15,7 @@ const BOLD_TERMS = [
   "CS2",
   "Overwatch",
   "SDE 2",
-  "6+",
+  "5+",
   "3 years",
   "SDE 3",
 ];
@@ -31,23 +31,25 @@ function highlightBullet(text: string) {
   );
 }
 
-export default function AboutBulletList() {
+export default function AboutBulletList({ compact = false }: { compact?: boolean }) {
   const { t } = useLocale();
   const bullets = [t.about.bullet1, t.about.bullet2, t.about.bullet3, t.about.bullet4];
 
   return (
     <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className={styles.bulletsSection}>
-      <h2 className={styles.bulletsTitle}>{t.about.sectionLabel}</h2>
-      <ul className={styles.bulletList}>
+      {!compact && <h2 className={styles.bulletsTitle}>{t.about.sectionLabel}</h2>}
+      <ul className={compact ? styles.compactBulletList : styles.bulletList}>
         {bullets.map((bullet, idx) => (
           <motion.li
             key={idx}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.3 + idx * 0.08 }}
-            className={styles.bulletItem}
+            className={compact ? styles.compactBulletItem : styles.bulletItem}
           >
-            <span className={styles.bulletMarker}>•</span>
+            <span className={compact ? styles.bulletIndex : styles.bulletMarker}>
+              {compact ? `0${idx + 1}` : "\u2022"}
+            </span>
             <span>{highlightBullet(bullet)}</span>
           </motion.li>
         ))}

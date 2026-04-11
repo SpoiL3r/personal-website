@@ -24,7 +24,7 @@ export default function ContactSection() {
       subtitle={t.sections.contactSubtitle}
     >
       <div
-        className="hud-card"
+        className="hud-card surface-static"
         style={{
           background: "var(--bg-card)",
           backdropFilter: "blur(20px)",

@@ -15,7 +15,7 @@
  */
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { TROPHIES, FULL_PROFILE_THRESHOLD } from "../data/trophies";
 
 /**
@@ -42,6 +42,8 @@ const TrophyContext = createContext<TrophyContextValue>({
 
 /** localStorage key used to persist the visitor's unlocked trophy IDs. */
 const STORAGE_KEY = "unlocked-trophies";
+/** Broadcast when the visitor reaches 100% trophy completion in this session. */
+export const PLATINUM_COMPLETED_EVENT = "platinum:completed";
 
 /**
  * Reads previously unlocked trophies from localStorage and ensures
@@ -66,6 +68,7 @@ function getInitialTrophies(): Set<string> {
  */
 export function TrophyProvider({ children }: { children: React.ReactNode }) {
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(getInitialTrophies);
+  const previousProgress = useRef(unlockedIds.size);
 
   /**
    * Unlocks the trophy with the given `id`.
@@ -101,6 +104,14 @@ export function TrophyProvider({ children }: { children: React.ReactNode }) {
 
   const progress = unlockedIds.size;
   const total = TROPHIES.length;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (previousProgress.current < total && progress === total) {
+      window.dispatchEvent(new Event(PLATINUM_COMPLETED_EVENT));
+    }
+    previousProgress.current = progress;
+  }, [progress, total]);
 
   return (
     <TrophyContext.Provider value={{ unlockedIds, unlock, progress, total }}>

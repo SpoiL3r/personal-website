@@ -1,31 +1,17 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion";
 import Tag from "@/components/ui/Tag";
 import LocationFlag from "@/components/ui/LocationFlag";
 import type { Job } from "@/lib/data/experience";
 
 export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [touched, setTouched] = useState<string | null>(null);
-
-  // On touch devices, tapping a row toggles the tags
-  function handleTap(company: string) {
-    setTouched(prev => (prev === company ? null : company));
-  }
-
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      {jobs.map((exp, idx) => {
-        const tagsVisible = hovered === exp.company || touched === exp.company;
-        return (
+      {jobs.map((exp, idx) => (
         <motion.div
           key={exp.company}
           className="exp-row"
-          onHoverStart={() => setHovered(exp.company)}
-          onHoverEnd={() => setHovered(h => (h === exp.company ? null : h))}
-          onTap={() => handleTap(exp.company)}
           initial={{ opacity: 0, x: -16 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-40px" }}
@@ -34,11 +20,9 @@ export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
             display: "flex",
             gap: "1.5rem",
             paddingBottom: idx === jobs.length - 1 ? 0 : "2.5rem",
-            // Each row exposes its own accent so the CSS hover can use it
             ["--row-accent" as string]: exp.accent ?? "var(--accent)",
           }}
         >
-          {/* Spine: company logo (or fallback dot) + connecting line */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, width: "44px" }}>
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
@@ -90,17 +74,17 @@ export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.08 + 0.25, ease: "easeOut" }}
                 style={{
-                  width: "1px", flex: 1,
+                  width: "1px",
+                  flex: 1,
                   background: `linear-gradient(to bottom, ${exp.accent ?? "var(--accent)"}, var(--border))`,
-                  marginTop: "8px", transformOrigin: "top",
+                  marginTop: "8px",
+                  transformOrigin: "top",
                 }}
               />
             )}
           </div>
 
-          {/* Content */}
           <div style={{ flex: 1, paddingBottom: "0.5rem" }}>
-            {/* Header row */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.5rem" }}>
               <div>
                 <h2 style={{ fontSize: "1rem", margin: 0 }}>{exp.company}</h2>
@@ -119,41 +103,36 @@ export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
               </div>
             </div>
 
-            {/* Impact highlights */}
             {exp.highlights && exp.highlights.length > 0 && (
               <ul style={{ listStyle: "none", padding: 0, margin: "0.75rem 0 0", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                 {exp.highlights.map((h, hi) => (
                   <li key={hi} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", fontSize: "0.825rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
-                    <span style={{ color: exp.accent ?? "var(--accent)", flexShrink: 0, marginTop: "1px", fontFamily: "var(--font-mono, monospace)", fontSize: "0.7rem" }}>▸</span>
+                    <span style={{ color: exp.accent ?? "var(--accent)", flexShrink: 0, marginTop: "1px", fontFamily: "var(--font-mono, monospace)", fontSize: "0.7rem" }}>
+                      {"\u2022"}
+                    </span>
                     {h}
                   </li>
                 ))}
               </ul>
             )}
 
-            {/* Tech tags */}
             {exp.tags && exp.tags.length > 0 && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "0.75rem", minHeight: "1.5rem" }}>
-                <AnimatePresence>
-                  {tagsVisible &&
-                    exp.tags.map((tag, ti) => (
-                      <motion.span
-                        key={tag}
-                        initial={{ opacity: 0, x: -12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -6 }}
-                        transition={{ duration: 0.25, delay: ti * 0.04, ease: [0.16, 1, 0.3, 1] as const }}
-                      >
-                        <Tag label={tag} color={exp.accent} />
-                      </motion.span>
-                    ))}
-                </AnimatePresence>
+                {exp.tags.map((tag, ti) => (
+                  <motion.span
+                    key={tag}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.25, delay: ti * 0.04, ease: [0.16, 1, 0.3, 1] as const }}
+                  >
+                    <Tag label={tag} color={exp.accent} />
+                  </motion.span>
+                ))}
               </div>
             )}
           </div>
         </motion.div>
-        );
-      })}
+      ))}
     </div>
   );
 }

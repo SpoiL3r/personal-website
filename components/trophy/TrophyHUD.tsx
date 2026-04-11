@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useTrophies } from "@/lib/contexts/TrophyContext";
 import { useLocale } from "@/lib/contexts/LocaleContext";
@@ -13,10 +13,12 @@ export default function TrophyHUD() {
   const { unlockedIds, progress, total } = useTrophies();
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const pct = total > 0 ? progress / total : 0;
   const dash = RING_CIRC * pct;

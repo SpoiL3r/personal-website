@@ -15,7 +15,7 @@ export default function ExperienceSection() {
       subtitle={t.sections.experienceSubtitle}
     >
       <div
-        className="hud-card"
+        className="hud-card surface-static"
         style={{
           background: "var(--bg-card)",
           backdropFilter: "blur(20px)",

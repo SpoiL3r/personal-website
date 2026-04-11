@@ -39,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
           fontFamily: "var(--font-mono, monospace)",
           color: "var(--text-dim)",
         }}>
-          // failed to load
+          {"// failed to load"}
         </p>
       );
     }

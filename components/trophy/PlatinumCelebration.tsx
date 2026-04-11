@@ -23,9 +23,9 @@
  */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTrophies } from "@/lib/contexts/TrophyContext";
+import { PLATINUM_COMPLETED_EVENT, useTrophies } from "@/lib/contexts/TrophyContext";
 import { useLocale } from "@/lib/contexts/LocaleContext";
 
 /** localStorage key that marks the celebration as already seen (prevents re-trigger on reload). */
@@ -123,15 +123,33 @@ export default function PlatinumCelebration() {
     }
   }
 
+  const showCelebration = useCallback((markSeen: boolean) => {
+    if (typeof window === "undefined") return;
+    if (markSeen) {
+      if (localStorage.getItem(SEEN_KEY) === "1") return;
+      localStorage.setItem(SEEN_KEY, "1");
+    }
+    setVisible(true);
+    playBeep();
+  }, []);
+
   // Listen for manual replays from anywhere in the app
   useEffect(() => {
     function onReplay() {
-      setVisible(true);
-      playBeep();
+      showCelebration(false);
     }
+
+    function onCompleted() {
+      showCelebration(true);
+    }
+
     window.addEventListener(PLATINUM_REPLAY_EVENT, onReplay);
-    return () => window.removeEventListener(PLATINUM_REPLAY_EVENT, onReplay);
-  }, []);
+    window.addEventListener(PLATINUM_COMPLETED_EVENT, onCompleted);
+    return () => {
+      window.removeEventListener(PLATINUM_REPLAY_EVENT, onReplay);
+      window.removeEventListener(PLATINUM_COMPLETED_EVENT, onCompleted);
+    };
+  }, [showCelebration]);
 
   // Automatic trigger: fires once when all trophies are completed for the first time.
   // setTimeout(..., 0) defers the state update to the next event-loop tick so the
@@ -139,15 +157,11 @@ export default function PlatinumCelebration() {
   useEffect(() => {
     if (progress < total || total === 0) return;
     if (typeof window === "undefined") return;
-    // SEEN_KEY guard: prevents re-showing on every subsequent page visit.
-    if (localStorage.getItem(SEEN_KEY) === "1") return;
-    localStorage.setItem(SEEN_KEY, "1");
     const id = window.setTimeout(() => {
-      setVisible(true);
-      playBeep();
+      showCelebration(true);
     }, 0);
     return () => window.clearTimeout(id);
-  }, [progress, total]);
+  }, [progress, showCelebration, total]);
 
   function close() {
     setVisible(false);
@@ -329,5 +343,3 @@ export default function PlatinumCelebration() {
     </AnimatePresence>
   );
 }
-
-

@@ -41,7 +41,7 @@ export default function SystemKnowledge() {
         {CATEGORIES.map(({ labelKey, icon: CatIcon, accent, items }, i) => (
           <motion.div
             key={labelKey}
-            className="knowledge-category"
+            className="knowledge-category surface-info"
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
