@@ -1,351 +1,205 @@
-# Personal Website — Architecture & Design
-
-Maintainer reference for `vaibhav.dev`. Last updated: April 2026.
-
----
-
-## 1. Stack
-
-| Layer | Choice | Version |
-|---|---|---|
-| Framework | Next.js App Router | 16.2.2 |
-| Language | TypeScript | ^5 |
-| Styling | Tailwind CSS v4 | ^4 |
-| Animation | Framer Motion | ^12 |
-| Theming | next-themes | ^0.4.6 |
-| Icons | lucide-react + react-icons | ^1.7 / ^5.6 |
-| Runtime | React 19 | 19.2.4 |
-
-Fonts loaded via `next/font/google`: **Geist Sans** (`--font-geist-sans`), **Geist Mono** (`--font-geist-mono`), **Caveat** (`--font-signature`, 700 — used for handwritten signature), **Instrument Serif** (`--font-display`, 400 normal+italic).
-
----
-
-## 2. Directory Layout
-
-```
-personal-website/
-├── app/
-│   ├── layout.tsx          # Root layout — providers, Navbar, Footer, overlays
-│   ├── page.tsx            # Single-page composition (all home sections)
-│   ├── globals.css         # Tailwind base + CSS custom properties + animations
-│   ├── not-found.tsx       # Custom 404 page
-│   ├── about/page.tsx      # /about route
-│   ├── experience/page.tsx # /experience route
-│   ├── blog/page.tsx       # /blog route
-│   └── api/
-│       ├── chess-stats/    # Lichess + Chess.com ratings + live opening aggregation
-│       ├── gaming-stats/   # Steam hours + manual game overrides
-│       ├── holidays/       # India public holidays + RBI Bengaluru bank holidays
-│       └── visitors/       # Country-flag visitor tracking (file-backed)
-│
-├── components/
-│   ├── layout/             # Structural chrome — always visible
-│   │   ├── Navbar.tsx          # Sticky top nav with scroll-spy
-│   │   ├── Footer.tsx          # Site footer
-│   │   ├── ThemeProvider.tsx   # Wraps next-themes <ThemeProvider>
-│   │   ├── ThemeToggle.tsx     # Dark/light toggle with audio feedback
-│   │   ├── ProfileStatus.tsx   # Fixed avatar + presence pill (owner-only panel)
-│   │   ├── StatusPanel.tsx     # Settings dropdown (auto/manual/holiday) — localhost only
-│   │   ├── TabBar.tsx          # Mobile bottom tab bar
-│   │   └── VisitorFlags.tsx    # Country flag strip; fires POST /api/visitors on mount
-│   │
-│   ├── sections/           # Page-level content sections
-│   │   ├── Section.tsx             # Generic titled section wrapper
-│   │   ├── ExperienceSection.tsx
-│   │   ├── EducationSection.tsx
-│   │   ├── ExtracurricularSection.tsx  # Hosts GamerSection + ChessCard + GamingCard
-│   │   ├── ContactSection.tsx
-│   │   └── GamerSection.tsx        # Gaming identity + social links + Steam cards
-│   │
-│   ├── home/               # Components specific to the home page
-│   │   ├── HomeHero.tsx        # Landing hero card
-│   │   └── SystemKnowledge.tsx # 6-category tech skill grid
-│   │
-│   ├── about/              # Components specific to the About section
-│   │   ├── AboutHero.tsx
-│   │   ├── AboutIdentityHeader.tsx
-│   │   ├── AboutMetaRow.tsx
-│   │   ├── AboutSocialLinks.tsx
-│   │   └── AboutBulletList.tsx
-│   │
-│   ├── experience/
-│   │   └── ExperienceTimeline.tsx  # Timeline rendering (data from lib/data/experience.ts)
-│   │
-│   ├── cards/              # Domain-specific data-display cards
-│   │   ├── ChessCard.tsx       # Live chess ratings + opening stats
-│   │   └── GamingCard.tsx      # Per-game Steam hours bar
-│   │
-│   ├── trophy/             # Achievement system UI
-│   │   ├── TrophyHUD.tsx           # Fixed overlay trigger (top-right)
-│   │   ├── TrophyDropdown.tsx      # Flyout panel listing all trophies
-│   │   ├── TrophyItem.tsx          # Single trophy row (locked/unlocked)
-│   │   └── PlatinumCelebration.tsx # Full-screen modal for 100% completion
-│   │
-│   ├── locale/
-│   │   └── LocaleToggle.tsx    # EN / HI / DE language switcher
-│   │
-│   └── ui/                 # Generic reusable primitives
-│       ├── AnimateIn.tsx       # Framer Motion scroll-reveal wrapper
-│       ├── CardHeader.tsx
-│       ├── ErrorBoundary.tsx   # Class-based error boundary (wraps API cards)
-│       ├── LocationFlag.tsx
-│       ├── SectionLabel.tsx
-│       ├── SkillBars.tsx
-│       ├── SkillsGrid.tsx
-│       ├── Tag.tsx
-│       ├── TerminalDivider.tsx
-│       └── TerminalWindow.tsx
-│
-├── lib/
-│   ├── contexts/           # React context providers + hooks
-│   │   ├── LocaleContext.tsx   # i18n provider + useLocale() hook
-│   │   └── TrophyContext.tsx   # Trophy state provider + useTrophies() hook
-│   │
-│   ├── hooks/              # Client-side React hooks
-│   │   ├── useChessStats.ts    # Fetches /api/chess-stats with AbortController
-│   │   ├── useFetchData.ts     # Generic fetch hook (loading/error/cancel)
-│   │   └── useProfileStatus.ts # IST schedule + holiday logic for ProfileStatus
-│   │
-│   ├── data/               # Static typed data
-│   │   ├── experience.ts       # EXPERIENCE[] + EDUCATION[] + Job interface
-│   │   ├── trophies.ts         # TROPHIES[] + FULL_PROFILE_THRESHOLD
-│   │   └── techStack.ts        # CATEGORIES[] for SystemKnowledge grid
-│   │
-│   └── locales/            # i18n translation files
-│       ├── types.ts        # Translations interface — single source of truth
-│       ├── en.ts
-│       ├── hi.ts
-│       └── de.ts
-│
-├── docs/
-│   └── DESIGN.md           # This file
-│
-├── public/
-│   └── logos/              # Company/university logo images
-│
-└── data/
-    └── visitors.json       # Persisted visitor country codes (git-ignored on prod)
-```
+# Design and Architecture
 
----
+## Purpose
 
-## 3. Page Composition
+This document explains how the portfolio is structured and why it is organized this way.
 
-The home page (`app/page.tsx`) is a **single scrollable page** composed of sequential sections. DOM order (which must match the Navbar `NAV` array for scroll-spy to work correctly):
-
-```
-<Home>
-  <section id="home">   <HomeHero />                    # hero card
-  <ExperienceSection />                                  # id="experience"
-  <Section id="about">
-    <AboutHero compact />
-    <SystemKnowledge />
-  </Section>
-  <EducationSection />                                   # id="education"
-  <ExtracurricularSection />                             # id="extracurricular"
-  <ContactSection />                                     # id="contact"
-```
-
-**`Section`** (`components/sections/Section.tsx`) is the generic layout primitive used by all content sections: renders `<section id>` with a `SectionLabel`, `h2` title, subtitle, then `children`.
-
-All sections read translations via `const { t } = useLocale()` — no hardcoded strings in JSX.
-
-**Global overlays** (in `app/layout.tsx`, outside `<main>`):
-
-| Overlay | Position | Notes |
-|---|---|---|
-| `<ProfileStatus />` | Fixed, top-left | Owner panel gated to localhost |
-| `<TrophyHUD />` | Fixed, top-right | Opens TrophyDropdown |
-| `<PlatinumCelebration />` | Full-screen modal | Mounts when `full_profile` unlocks |
-| `<VisitorFlags />` | Invisible on mount | POSTs visitor country, renders flag strip |
-
----
-
-## 4. Providers & Global State
-
-Provider nesting order in `app/layout.tsx`:
-
-```
-<ThemeProvider>           ← next-themes
-  <TrophyProvider>        ← lib/contexts/TrophyContext
-    <LocaleProvider>      ← lib/contexts/LocaleContext
-      ...app
-```
-
-| Provider | Source | State held | Persistence |
-|---|---|---|---|
-| `ThemeProvider` | `next-themes` | `"light"` \| `"dark"` | System pref / `localStorage` (next-themes managed) |
-| `TrophyProvider` | `lib/contexts/TrophyContext.tsx` | `Set<string>` of unlocked IDs | `localStorage` key `unlocked-trophies` |
-| `LocaleProvider` | `lib/contexts/LocaleContext.tsx` | `"en"` \| `"hi"` \| `"de"` + active `Translations` dict | `localStorage` key `preferred-locale` |
-
-Both custom providers use a **lazy `useState` initialiser** gated with `typeof window === "undefined"` for SSR safety.
-
----
-
-## 5. i18n System
-
-`lib/locales/types.ts` defines the **`Translations` interface** — the single source of truth for every string key. Namespaces: `nav`, `hero`, `status`, `career`, `systemKnowledge`, `about`, `experience`, `sections`, `extracurricular`, `contact`, `social`, `footer`, `blog`, `locale`, `visitors`, `languages`, `trophies`.
-
-Three language files (`en.ts`, `hi.ts`, `de.ts`) satisfy `Translations`. TypeScript enforces completeness at compile time.
-
-### Hook
-
-```ts
-const { t, locale, setLocale } = useLocale();
-// t.nav.home, t.sections.aboutTitle, etc.
-```
-
-### Adding a new key (3 steps)
-
-1. `lib/locales/types.ts` — add to the relevant namespace in `Translations`
-2. `lib/locales/en.ts` + `hi.ts` + `de.ts` — add translated string to all three (TS errors until complete)
-3. Component — consume via `t.<namespace>.<key>`
-
-### Adding a new language (4 steps)
-
-1. Add code to `Locale` union in `lib/contexts/LocaleContext.tsx`
-2. Create `lib/locales/<code>.ts` satisfying `Translations`
-3. Register in `DICTIONARIES` map in `LocaleContext.tsx`
-4. Add UI option to `components/locale/LocaleToggle.tsx`
-
----
-
-## 6. Trophy System
-
-### Data (`lib/data/trophies.ts`)
-
-10 trophies as `Trophy[]`. Each has `id`, `icon` (emoji), `titleKey` / `descKey` (typed keys into `Translations["trophies"]`).
-
-Special trophy: `full_profile` — platinum completion.
-Threshold: `FULL_PROFILE_THRESHOLD = 8`.
-
-### State (`lib/contexts/TrophyContext.tsx`)
-
-- `unlockedIds: Set<string>` — persisted to `localStorage` key `unlocked-trophies`
-- `first_visit` added automatically on every `getInitialTrophies()` call
-- `unlock(id)` — idempotent; auto-adds `full_profile` when non-meta count ≥ 8
-
-### Unlock call sites
-
-| Trophy ID | Triggered when |
-|---|---|
-| `first_visit` | Automatically on every page load |
-| `about_explorer` | About section viewed |
-| `exp_deep_dive` | Experience timeline expanded |
-| `tech_curious` | SystemKnowledge grid hovered |
-| `chess_fan` | ChessCard viewed |
-| `gaming_fan` | GamingCard / GamerSection viewed |
-| `linkedin_stalker` | LinkedIn link clicked |
-| `github_hunter` | GitHub link clicked |
-| `mail_sender` | Email / Contact link clicked |
-| `full_profile` | Auto — 8+ other trophies unlocked |
+The project is not trying to be a full CMS or a generic template. It is a code-first portfolio with a small number of live integrations, optimized for:
 
-### UI flow
+- clarity of professional signal
+- maintainable frontend composition
+- predictable external data flow
+- low operational complexity
 
-```
-TrophyHUD (fixed, top-right)
-  └── TrophyDropdown
-        └── TrophyItem × 10
-PlatinumCelebration (full-screen modal)
-```
+## Product Goals
 
----
+### Primary goals
 
-## 7. Status / Presence System
+- Present engineering experience with a professional, high-quality visual language
+- Keep the main user journey inside a single-page portfolio flow
+- Add a few live elements without letting them dominate the site
+- Support multiple languages with compile-time safety
+- Keep the deployment model simple enough for a personal project
 
-Split across two files after refactor:
+### Non-goals
 
-| File | Responsibility |
-|---|---|
-| `lib/hooks/useProfileStatus.ts` | All state, effects, IST helpers, localStorage, holiday merge |
-| `components/layout/ProfileStatus.tsx` | Avatar + pill rendering, statusMap (needs `t`), open/close logic |
-| `components/layout/StatusPanel.tsx` | Owner-only settings panel JSX (pure props) |
+- Headless CMS integration
+- Authentication or personalized dashboards
+- Complex analytics or persistent product-style backends
+- Real-time infra beyond what is useful for portfolio storytelling
 
-### Modes
+## Site Structure
 
-| Mode | Behaviour |
-|---|---|
-| `auto` | Status derived from IST time every 60 s; holidays override to `vacation` |
-| `manual` | Owner picks `StatusId` from dropdown; stored in `localStorage` |
+The main experience lives on `/` and is section-based:
 
-Settings panel visible only on `localhost` / `127.0.0.1`. Keyboard shortcut: `Ctrl/Cmd + Shift + S`.
+1. Hero
+2. Experience
+3. About / Profile
+4. Education
+5. Extracurriculars
+6. Contact
 
-### Auto-mode IST schedule (weekdays)
+The navbar scrolls to section anchors instead of routing to separate pages for core portfolio content. This keeps the experience coherent and avoids fragmenting the narrative.
 
-| Time (IST) | Status | Presence |
-|---|---|---|
-| 00:00 – 07:00 | `sleeping` | `offline` |
-| 07:00 – 08:30 | `learning` | `available` |
-| 08:30 – 09:00 | `available` | `available` |
-| 09:00 – 09:30 | `working` | `busy` |
-| 09:30 – 10:00 | `coffee` | `away` |
-| 10:00 – 12:00 | `working` | `busy` |
-| 12:00 – 13:00 | `lunch` | `away` |
-| 13:00 – 17:00 | `working` | `busy` |
-| 17:00 – 19:00 | `available` | `available` |
-| 19:00 – 24:00 | `cs2` / `overwatch` (alternates) | `dnd` |
+Additional routes exist only where they add value:
 
-Weekends: sleeping → learning → gaming → available flow. Holidays → `vacation`.
+- `/experience` for a standalone timeline page
+- `/blog` as a placeholder route
+- `/about` as a redirect to `/#about` for backward compatibility
+- `/sitemap.xml` for search-engine discovery
 
-### localStorage keys
+## Application Architecture
 
-| Key | Purpose |
-|---|---|
-| `vs-status-mode` | `"auto"` \| `"manual"` |
-| `vs-manual-status` | Active `StatusId` in manual mode |
-| `vs-holiday-dates` | JSON array of ISO date strings (owner-flagged holidays) |
+### App Router
 
----
+The project uses Next.js App Router so that:
 
-## 8. API Routes
+- page composition stays simple
+- metadata and sitemap generation are first-class
+- server routes can proxy external APIs cleanly
 
-| Route | Method | Purpose | Caching |
-|---|---|---|---|
-| `/api/chess-stats` | GET | Lichess + Chess.com ratings; last 300 rated games aggregated for live opening stats | `revalidate: 3600` (1 h) |
-| `/api/gaming-stats` | GET | Steam `GetOwnedGames` for configured app IDs + manual game overrides | `revalidate: 3600` (1 h) |
-| `/api/holidays` | GET | India national holidays (Nager.Date) + Bengaluru bank holidays (RBI HTML scrape) | `revalidate: 43200` (12 h), `runtime: nodejs` |
-| `/api/visitors` | GET | Returns sorted list of stored country codes | `force-dynamic` |
-| `/api/visitors` | POST | Resolves country (Vercel header → CF header → ip-api.com → `VISITOR_DEV_COUNTRY` env) and upserts | `force-dynamic` |
+### Frontend composition
 
-**Visitor storage:** flat JSON at `data/visitors.json`. Fails silently on read-only serverless — state lives in module-level `memoryCache`. Upstash / Vercel KV is the upgrade path.
+The component structure is split by responsibility:
 
-**Environment variables:**
+- `components/sections`: page-level composition
+- `components/home`, `components/about`, `components/experience`: domain-specific UI
+- `components/layout`: shell-level concerns such as navbar, footer, and theme
+- `components/ui`: reusable primitives
 
-| Variable | Purpose |
-|---|---|
-| `STEAM_API_KEY` | Steam Web API key |
-| `STEAM_ID` | Steam 64-bit user ID |
-| `VISITOR_DEV_COUNTRY` | ISO-3166 fallback for local dev (defaults to `"IN"`) |
+This keeps feature code close together while avoiding an overly abstract design system.
 
----
+### Content model
 
-## 9. Theming
+Portfolio content is stored in code:
 
-- `next-themes` manages the `light` / `dark` class on `<html>`
-- `suppressHydrationWarning` on `<html>` prevents SSR mismatch from deferred theme resolution
-- CSS custom properties declared in `app/globals.css`, toggled by `html.light` selector
-- **Dark:** IntelliJ "New UI" dark palette (`--bg: #1e1f22`, accent teal `#00c9b1`)
-- **Light:** medium slate palette (`--bg: #d4d8e6`, cards `--bg-card: #e6e9f5`) — reduced brightness intentionally to avoid washed-out cards
-- `ThemeToggle.tsx` plays a WebAudio click on toggle
-- Theme-aware inline styles use `useTheme()` → `resolvedTheme` to select light/dark tokens at runtime
+- work history and education in `lib/data/experience.ts`
+- technical categories in `lib/data/techStack.ts`
+- locale strings in `lib/locales/*.ts`
 
----
+This is intentional. For a portfolio, code-based content is easier to version, review, and refactor than a CMS.
 
-## 10. Error Handling
+## State Management
 
-API-dependent components are wrapped in `<ErrorBoundary>` (class component in `components/ui/ErrorBoundary.tsx`):
+There are only a few shared state domains, each handled explicitly:
 
-- `<ChessCard>` — inside `ExtracurricularSection`
-- `<GamingCard>` — inside `ExtracurricularSection`
-- `<VisitorFlags>` — in `app/layout.tsx`
+### Locale
 
-Each component also has its own `error` state that renders a localised `// failed to load` fallback before a boundary is needed.
+`LocaleContext` provides typed access to translation dictionaries. The `Translations` type in `lib/locales/types.ts` is the source of truth, so missing keys fail at compile time.
 
----
+### Trophies
 
-## 11. Known Tech Debt
+`TrophyContext` manages lightweight achievement state:
 
-| Item | File | Notes |
-|---|---|---|
-| Visitor persistence | `app/api/visitors/route.ts` | File-based JSON silently degrades to in-memory on serverless. Swap to Upstash Redis / Vercel KV before scaled production deployment. |
-| Manual game hours | `app/api/gaming-stats/route.ts` | Overwatch 2 and Valorant hours are hardcoded — no public API. Update `MANUAL_GAMES` manually when needed. |
+- unlocked trophy IDs
+- progress counts
+- `localStorage` persistence
+- full-profile completion detection
+
+This system is intentionally isolated from the rest of the app so it does not complicate normal content rendering.
+
+### Theme
+
+Theme state is handled through `next-themes`, with a minimal toggle component and CSS-variable-driven color tokens.
+
+## Styling Strategy
+
+Styling is a combination of:
+
+- global CSS tokens and interaction rules in `app/globals.css`
+- module CSS where a component has a distinctive internal layout
+- inline styles where a component benefits from proximity and low indirection
+
+This is a pragmatic mix rather than a purist approach.
+
+### Visual principles
+
+- surfaces are intentionally restrained
+- motion supports hierarchy, not decoration
+- interactive elements get stronger hover feedback than informational ones
+- non-clickable containers stay quiet
+
+The current card system is role-based:
+
+- `surface-static`: structural containers with no hover emphasis
+- `surface-info`: informational blocks with subtle feedback
+- stronger hover/lift reserved for actual actions and links
+
+## Data Flow
+
+The site uses a small number of server routes to normalize external data before it reaches the UI.
+
+### `/api/chess-stats`
+
+Aggregates:
+
+- Lichess user ratings
+- Chess.com ratings
+- Lichess opening data from recent rated games
+
+The route returns a stable shape so the client components do not need to know about multiple upstream APIs.
+
+### `/api/gaming-stats`
+
+Combines:
+
+- Steam-owned game playtime for selected titles
+- manual overrides for unsupported titles
+
+This route exists because the UI only needs a curated portfolio-facing subset of gaming data, not the raw Steam payload.
+
+### `/api/visitors`
+
+Tracks unique visitor countries for the visitor widget.
+
+Priority order:
+
+1. platform geo headers
+2. Cloudflare geo header
+3. IP-based fallback
+4. local development fallback
+
+Persistence is file-based with in-memory fallback so the feature still works in restricted environments.
+
+## SEO and Metadata
+
+The site includes:
+
+- route-level metadata
+- sitemap generation
+- robots handling for unfinished pages such as `/blog`
+
+This keeps the site crawlable without exposing placeholder content as production-ready material.
+
+## Deployment Model
+
+The site is designed for Vercel deployment with minimal operational burden.
+
+### Why this is sufficient
+
+- dynamic data needs are small
+- external requests are simple proxy/aggregation work
+- the site does not require long-lived background jobs
+- failures in live widgets degrade gracefully
+
+## Tradeoffs
+
+### Why no CMS
+
+Because the portfolio changes infrequently and benefits from code review more than editorial tooling.
+
+### Why keep some live widgets at all
+
+Because live data makes the site feel current and engineered, but only when it stays subordinate to the professional narrative.
+
+### Why keep docs lightweight
+
+Because this is still a personal site. The code should remain understandable without a large maintenance burden.
+
+## Future Improvements
+
+- Replace the GitHub avatar with a dedicated professional headshot in `public/`
+- Add real blog content or remove the route entirely
+- Replace file-based visitor storage with KV if durable serverless persistence becomes important
+- Add image and Open Graph asset generation
+- Add more measurable impact numbers to experience content
