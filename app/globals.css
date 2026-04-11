@@ -65,9 +65,8 @@ html.light .knowledge-category {
     0 1px 3px rgba(15, 15, 40, 0.07),
     0 8px 24px rgba(15, 15, 40, 0.09);
 }
-html.light .glass-card:hover,
-html.light .hud-card:hover,
-html.light .knowledge-category:hover {
+html.light .surface-interactive:hover,
+html.light .surface-info:hover {
   box-shadow:
     0 2px 6px rgba(15, 15, 40, 0.09),
     0 16px 40px rgba(15, 15, 40, 0.14);
@@ -148,8 +147,7 @@ body::after {
 ::view-transition-new(root) { z-index: 9999; }
 
 /* Keep fixed overlays out of the view transition so they don't flash */
-.trophy-hud-wrap,
-.profile-status-wrap {
+.trophy-hud-wrap {
   view-transition-name: none;
 }
 
@@ -249,6 +247,35 @@ li { margin-bottom: 0.35rem; }
 .glass-card:hover {
   border-color: var(--border-strong);
   box-shadow: 0 0 40px rgba(0,0,0,0.5), 0 0 0 1px var(--border-strong);
+}
+
+.surface-static {
+  transition: none;
+}
+
+.surface-info {
+  transition:
+    border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.surface-info:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.surface-interactive {
+  transition:
+    border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.surface-interactive:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 16px 40px rgba(0,0,0,0.2);
+  transform: translateY(-3px);
 }
 
 /* ── Tags ───────────────────────────────────────────────────── */
@@ -616,14 +643,7 @@ html.light .shimmer-name {
 }
 
 .knowledge-category:hover {
-  border-color: var(--border-strong);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 16px 40px rgba(0,0,0,0.2);
-  transform: translateY(-3px);
-}
-
-/* Tech items nudge right on card hover */
-.knowledge-category:hover .tech-item {
-  transform: translateX(2px);
+  transform: none;
 }
 .tech-item {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -740,6 +760,62 @@ html { scroll-behavior: auto; }
   .nav-link-v2.bounce { animation: none; }
 }
 
+.nav-profile-link {
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.nav-profile-link:hover {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+.nav-profile-avatar {
+  width: 34px;
+  height: 34px;
+  position: relative;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 58%),
+    var(--bg-hover);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  color: transparent;
+}
+.nav-profile-avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.nav-profile-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+.nav-profile-name {
+  color: var(--text);
+  font-size: 0.83rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+.nav-profile-meta {
+  color: var(--text-dim);
+  font-size: 0.62rem;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
 /* Shimmer underline running across the bottom of the navbar */
 header[role], header {
   position: sticky;
@@ -782,12 +858,11 @@ header[role], header {
 }
 .exp-row:hover {
   background: color-mix(in srgb, var(--row-accent, var(--accent)) 6%, transparent);
-  transform: translateX(2px);
-  box-shadow: 0 8px 28px color-mix(in srgb, var(--row-accent, var(--accent)) 12%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--row-accent, var(--accent)) 16%, transparent);
 }
 /* Logo tile glow on row hover (rotate/scale handled by Framer Motion whileHover) */
 .exp-row:hover > div:first-child > div:first-child {
-  box-shadow: 0 6px 24px color-mix(in srgb, var(--row-accent, var(--accent)) 35%, transparent) !important;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--row-accent, var(--accent)) 22%, transparent) !important;
   transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -802,13 +877,12 @@ header[role], header {
 }
 .edu-row:hover {
   background: color-mix(in srgb, var(--row-accent, var(--accent)) 6%, transparent);
-  transform: translateX(2px);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--row-accent, var(--accent)) 16%, transparent);
 }
 /* Logo tile lifts on row hover */
 .edu-row:hover > div:first-child {
-  transform: scale(1.06) rotate(-2deg);
-  box-shadow: 0 6px 24px color-mix(in srgb, var(--row-accent, var(--accent)) 35%, transparent) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--row-accent, var(--accent)) 22%, transparent) !important;
+  transition: box-shadow 0.3s ease;
 }
 
 /* ── Profile status dropdown pop animation ───────────────────── */
@@ -817,13 +891,6 @@ header[role], header {
   to   { opacity: 1; transform: translateY(0)    scale(1);    }
 }
 @media (max-width: 720px) {
-  /* Hide the status text on narrow screens, keep the avatar + dot */
-  .status-pill { display: none !important; }
-  .profile-spacer { width: 60px !important; }
-  .profile-status-wrap {
-    top: 8px !important;
-    left: 10px !important;
-  }
   .trophy-hud-wrap {
     top: 8px !important;
     right: 10px !important;
@@ -837,6 +904,8 @@ header[role], header {
 }
 
 @media (max-width: 900px) {
+  .nav-profile-link { width: 148px !important; }
+  .nav-profile-name { font-size: 0.78rem !important; }
   .nav-main {
     justify-content: flex-start !important;
     overflow-x: auto;
@@ -857,7 +926,17 @@ header[role], header {
   .nav-main { display: none !important; }
   .nav-resume-btn { display: none !important; }
   .nav-hamburger { display: flex !important; }
-  .profile-spacer { display: none !important; }
+  .nav-profile-link {
+    width: auto !important;
+    min-width: 0;
+    gap: 0 !important;
+  }
+  .nav-profile-copy { display: none !important; }
+  .nav-profile-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.72rem;
+  }
   .nav-locale-desktop { display: none !important; }
   .nav-controls { margin-left: auto; }
   .trophy-hud-wrap { display: none !important; }
@@ -898,10 +977,7 @@ header[role], header {
     transform    0.25s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow   0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.hud-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 16px 40px rgba(0,0,0,0.2);
-}
+.hud-card:hover { transform: none; box-shadow: none; }
 
 /* ── Theme crossfade: only active during the ~180ms flash window ── */
 .theme-transitioning *,

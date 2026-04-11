@@ -2,7 +2,6 @@
   position: relative;
   padding-top: 7rem;
   padding-bottom: 4rem;
-  text-align: center;
   overflow: hidden;
 }
 
@@ -16,12 +15,12 @@
 
 .ambientGlow {
   background:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(139,92,246,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(0,201,177,0.12) 0%, transparent 55%);
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(139, 92, 246, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(0, 201, 177, 0.12) 0%, transparent 55%);
 }
 
 .dotGrid {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 32px 32px;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
@@ -30,7 +29,21 @@
 .content {
   position: relative;
   z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
   padding-top: 1rem;
+  text-align: left;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 1.1rem;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .title {
@@ -41,11 +54,25 @@
   margin: 0 0 1.25rem;
 }
 
+.roleLine {
+  max-width: 720px;
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
 .badges {
   margin-top: 1.75rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 0.5rem;
 }
 
@@ -71,5 +98,19 @@
 }
 
 .badgeIcon {
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .content {
+    text-align: center;
+  }
+
+  .eyebrow,
+  .actions,
+  .badges {
+    justify-content: center;
+  }
 }

@@ -11,8 +11,8 @@ export default function TabBar() {
 
   const tabs = [
     { href: "/",           label: t.nav.home,       icon: "⌂" },
-    { href: "/about",      label: t.nav.about,      icon: "◉" },
-    { href: "/experience", label: t.nav.experience, icon: "◈" },
+    { href: "/#about",     label: t.nav.about,      icon: "◉" },
+    { href: "/experience", label: t.nav.experience, icon: "◇" },
     { href: "/blog",       label: t.nav.blog,       icon: "✦" },
   ];
 
@@ -33,7 +33,7 @@ export default function TabBar() {
           scrollbarWidth: "none",
         }}>
           {tabs.map(({ href, label, icon }) => {
-            const active = href === "/"
+            const active = href === "/" || href === "/#about"
               ? pathname === "/"
               : pathname === href || pathname.startsWith(href + "/");
 

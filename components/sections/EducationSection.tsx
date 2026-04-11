@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { GraduationCap } from "lucide-react";
 import Section from "./Section";
 import Tag from "@/components/ui/Tag";
@@ -11,7 +11,6 @@ import { useLocale } from "@/lib/contexts/LocaleContext";
 
 export default function EducationSection() {
   const { t } = useLocale();
-  const [hovered, setHovered] = useState<string | null>(null);
   return (
     <Section
       id="education"
@@ -19,7 +18,7 @@ export default function EducationSection() {
       subtitle={t.sections.educationSubtitle}
     >
       <div
-        className="hud-card"
+        className="hud-card surface-static"
         style={{
           background: "var(--bg-card)",
           backdropFilter: "blur(20px)",
@@ -33,8 +32,6 @@ export default function EducationSection() {
           <motion.div
             key={edu.company}
             className="edu-row"
-            onHoverStart={() => setHovered(edu.company)}
-            onHoverEnd={() => setHovered(h => (h === edu.company ? null : h))}
             initial={{ opacity: 0, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-40px" }}
@@ -148,20 +145,16 @@ export default function EducationSection() {
               </div>
               {edu.tags && edu.tags.length > 0 && (
                 <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", marginTop: "0.6rem", minHeight: "1.5rem" }}>
-                  <AnimatePresence>
-                    {hovered === edu.company &&
-                      edu.tags.map((tag, ti) => (
-                        <motion.span
-                          key={tag}
-                          initial={{ opacity: 0, x: -12 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -6 }}
-                          transition={{ duration: 0.25, delay: ti * 0.04, ease: [0.16, 1, 0.3, 1] as const }}
-                        >
-                          <Tag label={tag} color={edu.accent} />
-                        </motion.span>
-                      ))}
-                  </AnimatePresence>
+                  {edu.tags.map((tag, ti) => (
+                    <motion.span
+                      key={tag}
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.25, delay: ti * 0.04, ease: [0.16, 1, 0.3, 1] as const }}
+                    >
+                      <Tag label={tag} color={edu.accent} />
+                    </motion.span>
+                  ))}
                 </div>
               )}
             </div>

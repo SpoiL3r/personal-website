@@ -15,7 +15,7 @@
  *  - Scroll progress bar: a 2px accent-coloured bar at the very top of the
  *    viewport driven by useSpring(scrollYProgress).
  *  - Mobile: the resume button label is hidden via CSS class nav-resume-label;
- *    a spacer div (profile-spacer) reserves the width occupied by ProfileStatus.
+ *    the left profile chip collapses down so the navbar still reads cleanly on small screens.
  */
 "use client";
 
@@ -27,6 +27,7 @@ import { Download, Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import LocaleToggle from "@/components/locale/LocaleToggle";
 import { useLocale } from "@/lib/contexts/LocaleContext";
+import { GITHUB_AVATAR_URL } from "@/lib/constants/profile";
 
 interface NavItem {
   /** Anchor id on the home page (e.g. "about") OR an absolute route (e.g. "/blog"). */
@@ -40,7 +41,6 @@ const NAV: NavItem[] = [
   { target: "about",           labelKey: "about" },
   { target: "education",       labelKey: "education" },
   { target: "extracurricular", labelKey: "offClock" },
-  { target: "/blog",           labelKey: "blog" },
   { target: "contact",         labelKey: "contact" },
 ];
 
@@ -174,6 +174,8 @@ export default function Navbar() {
     return item.target.startsWith("/") ? item.target : `/#${item.target}`;
   }
 
+  const profileTarget: NavItem = { target: "about", labelKey: "about" };
+
   /** Handles nav link clicks: applies micro-bounce CSS, locks active state,
    *  then either lets Next.js route or runs the custom scroll animation. */
   function handleClick(e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) {
@@ -284,8 +286,36 @@ export default function Navbar() {
           gap: "1rem",
         }}
       >
-        {/* Spacer matching fixed profile-status width so nav links stay centered */}
-        <div style={{ width: "180px", flexShrink: 0 }} className="profile-spacer" />
+        <Link
+          href={hrefFor(profileTarget)}
+          onClick={e => handleClick(e, profileTarget)}
+          className="nav-profile-link"
+          aria-label="Open About section"
+          style={{
+            width: "188px",
+            minWidth: 0,
+            flexShrink: 0,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            textDecoration: "none",
+          }}
+        >
+          <span className="nav-profile-avatar" aria-hidden>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={GITHUB_AVATAR_URL}
+              alt=""
+              className="nav-profile-avatar-img"
+              referrerPolicy="no-referrer"
+            />
+            VS
+          </span>
+          <span className="nav-profile-copy">
+            <span className="nav-profile-name">Vaibhav Singh</span>
+            <span className="nav-profile-meta">Profile</span>
+          </span>
+        </Link>
 
         {/* Desktop nav */}
         <nav

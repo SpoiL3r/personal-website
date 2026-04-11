@@ -7,8 +7,14 @@ import { useLocale } from "@/lib/contexts/LocaleContext";
 const SESSION_FLAG = "visitor-registered";
 const MAX_FLAGS = 5;
 
-function flagUrl(code: string) {
-  return `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
+function normalizeCountries(codes: string[]) {
+  return Array.from(
+    new Set(
+      codes
+        .map((code) => code.trim().toUpperCase())
+        .filter((code) => /^[A-Z]{2}$/.test(code)),
+    ),
+  ).sort();
 }
 
 export default function VisitorFlags() {
@@ -35,7 +41,7 @@ export default function VisitorFlags() {
         if (!response.ok) return;
         const body = (await response.json()) as { countries: string[] };
         if (cancelled) return;
-        setCountries(body.countries ?? []);
+        setCountries(normalizeCountries(body.countries ?? []));
         if (!alreadyRegistered) sessionStorage.setItem(SESSION_FLAG, "1");
       } catch {
         // silent fail
@@ -57,9 +63,10 @@ export default function VisitorFlags() {
         zIndex: 40,
         display: "flex",
         flexDirection: "column",
-        gap: "0.5rem",
-        padding: "0.6rem 0.7rem",
-        borderRadius: "12px",
+        gap: "0.65rem",
+        minWidth: "156px",
+        padding: "0.75rem",
+        borderRadius: "14px",
         background: "var(--bg-card)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
@@ -95,31 +102,55 @@ export default function VisitorFlags() {
         />
       </div>
 
-      {/* Flags row */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+      {/* Countries list */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
         {visible.map((code) => (
-          <span
+          <div
             key={code}
             title={countryNames?.of(code) ?? code}
+            aria-label={countryNames?.of(code) ?? code}
             style={{
-              width: 20,
-              height: 15,
-              borderRadius: "3px",
-              overflow: "hidden",
-              border: "1px solid var(--border)",
-              display: "inline-flex",
-              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              minWidth: 0,
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={flagUrl(code)}
-              alt={countryNames?.of(code) ?? code}
-              width={20}
-              height={15}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
-          </span>
+            <span
+              style={{
+                minWidth: 28,
+                height: 22,
+                borderRadius: "7px",
+                border: "1px solid var(--border)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                background: "color-mix(in srgb, var(--bg-hover) 72%, transparent)",
+                fontSize: "0.68rem",
+                fontFamily: "var(--font-mono, monospace)",
+                fontWeight: 700,
+                color: "var(--text)",
+                letterSpacing: "0.04em",
+                padding: "0 0.35rem",
+              }}
+            >
+              {code}
+            </span>
+            <span
+              style={{
+                minWidth: 0,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                color: "var(--text-muted)",
+                fontSize: "0.72rem",
+              lineHeight: 1,
+              }}
+            >
+              {countryNames?.of(code) ?? code}
+            </span>
+          </div>
         ))}
         {hiddenCount > 0 && (
           <span
@@ -127,10 +158,10 @@ export default function VisitorFlags() {
               fontSize: "0.6rem",
               fontFamily: "var(--font-mono, monospace)",
               color: "var(--text-dim)",
-              marginLeft: "0.1rem",
+              paddingTop: "0.15rem",
             }}
           >
-            +{hiddenCount}
+            +{hiddenCount} {t.visitors.more}
           </span>
         )}
       </div>

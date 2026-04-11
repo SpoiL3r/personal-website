@@ -41,7 +41,7 @@ export default function ExtracurricularSection() {
       subtitle={t.sections.extracurricularSubtitle}
     >
       <div className="games-grid hud-card-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-        <div style={GLASS} className="hud-card">
+        <div style={GLASS} className="hud-card surface-static">
           <CardHeader label={t.extracurricular.gaming} Icon={Joystick} iconColor="#a78bfa" />
           <div style={{ padding: "1.25rem" }}>
             <ErrorBoundary>
@@ -50,7 +50,7 @@ export default function ExtracurricularSection() {
           </div>
         </div>
 
-        <div style={GLASS} className="hud-card">
+        <div style={GLASS} className="hud-card surface-static">
           <CardHeader label={t.extracurricular.chess} Icon={GiChessKnight} iconColor="#f59e0b" />
           <div style={{ padding: "1.25rem" }}>
             <ErrorBoundary>
@@ -61,7 +61,7 @@ export default function ExtracurricularSection() {
       </div>
 
       {/* Off-screen activities */}
-      <div style={{ ...GLASS, marginTop: "1rem" }} className="hud-card">
+      <div style={{ ...GLASS, marginTop: "1rem" }} className="hud-card surface-static">
         <CardHeader label={t.extracurricular.offScreen} Icon={HeartPulse} iconColor="#22c55e" />
         <div
           style={{
@@ -85,15 +85,7 @@ export default function ExtracurricularSection() {
                 fontSize: "0.82rem",
                 fontWeight: 600,
                 color: "var(--text)",
-                transition: "border-color 0.2s, transform 0.2s",
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = color;
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                transition: "border-color 0.2s",
               }}
             >
               <span
