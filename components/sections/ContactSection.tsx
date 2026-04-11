@@ -70,7 +70,7 @@ export default function ContactSection() {
           </a>
 
           <a
-            href="/resume.pdf"
+            href="/vaibhav_singh_cv.pdf"
             download
             style={{
               display: "inline-flex",
