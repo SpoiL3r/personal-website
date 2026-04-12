@@ -134,7 +134,7 @@ export default function LocaleToggle() {
             display: "flex",
             flexDirection: "column",
             gap: "2px",
-            animation: "status-pop 0.18s ease-out",
+            animation: "dropdown-pop 0.18s ease-out",
           }}
         >
           {options.map(({ code, label, Flag }) => {

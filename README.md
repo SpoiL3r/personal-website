@@ -99,7 +99,6 @@ app/
   api/
     chess-stats/        Lichess + Chess.com aggregation
     gaming-stats/       Steam playtime aggregation + manual overrides
-    holidays/           India public holiday data
     visitors/           Visitor-country tracking
   about/                Redirects to /#about
   blog/                 Placeholder route

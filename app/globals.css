@@ -535,14 +535,11 @@ html.light .shimmer-name {
   .bottom-grid  { grid-template-columns: 1fr !important; }
   .info-grid    { grid-template-columns: 1fr !important; }
   .socials-grid { grid-template-columns: 1fr 1fr !important; }
-  .status-row   { grid-template-columns: 1fr !important; }
-  .status-row > div:first-child { border-right: none !important; border-bottom: 1px solid var(--border); }
 }
 
 /* ── Responsive grids ───────────────────────────────────────── */
 @media (max-width: 760px) {
   .hero-grid        { grid-template-columns: 1fr !important; }
-  .hero-status      { display: none !important; }
   .about-hero-grid  { grid-template-columns: 1fr !important; }
 
   /* Languages wrap below the name block on narrow screens */
@@ -885,8 +882,8 @@ header[role], header {
   transition: box-shadow 0.3s ease;
 }
 
-/* ── Profile status dropdown pop animation ───────────────────── */
-@keyframes status-pop {
+/* ── Generic dropdown pop animation ──────────────────────────── */
+@keyframes dropdown-pop {
   from { opacity: 0; transform: translateY(-6px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0)    scale(1);    }
 }
