@@ -1,11 +1,19 @@
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import Tag from "@/components/ui/Tag";
 import LocationFlag from "@/components/ui/LocationFlag";
 import type { Job } from "@/lib/data/experience";
 
-export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
+interface ExperienceTimelineProps {
+  jobs: Job[];
+  onComplete?: () => void;
+}
+
+export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimelineProps) {
+  const hasCompleted = useRef(false);
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       {jobs.map((exp, idx) => (
@@ -14,6 +22,11 @@ export default function ExperienceTimeline({ jobs }: { jobs: Job[] }) {
           className="exp-row"
           initial={{ opacity: 0, x: -16 }}
           whileInView={{ opacity: 1, x: 0 }}
+          onViewportEnter={() => {
+            if (idx !== jobs.length - 1 || hasCompleted.current) return;
+            hasCompleted.current = true;
+            onComplete?.();
+          }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const, delay: idx * 0.08 }}
           style={{
