@@ -5,9 +5,12 @@ import Section from "./Section";
 import ExperienceTimeline from "@/components/experience/ExperienceTimeline";
 import { EXPERIENCE } from "@/lib/data/experience";
 import { useLocale } from "@/lib/contexts/LocaleContext";
+import { useTrophies } from "@/lib/contexts/TrophyContext";
 
 export default function ExperienceSection() {
   const { t } = useLocale();
+  const { unlock } = useTrophies();
+
   return (
     <Section
       id="experience"
@@ -25,7 +28,7 @@ export default function ExperienceSection() {
           padding: "1.75rem",
         }}
       >
-        <ExperienceTimeline jobs={EXPERIENCE} />
+        <ExperienceTimeline jobs={EXPERIENCE} onComplete={() => unlock("exp_deep_dive")} />
       </div>
     </Section>
   );
