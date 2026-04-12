@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 async function getLichess() {
   const res = await fetch("https://lichess.org/api/user/spoilerfps", {
@@ -119,7 +120,11 @@ async function getLichessOpenings() {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  if (!rateLimit(getClientIp(req), 60)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   try {
     const [lichess, chesscom, favouriteOpenings] = await Promise.all([
       getLichess(),

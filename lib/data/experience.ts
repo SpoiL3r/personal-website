@@ -23,7 +23,7 @@
  * @property accent     - CSS colour string used for the timeline indicator and tag highlights.
  * @property logo       - Square logo URL rendered in place of the timeline dot.
  */
-export interface Job {
+export interface TimelineEntry {
   company: string;
   role: string;
   period: string;
@@ -40,7 +40,7 @@ export interface Job {
  *
  * Each entry maps directly to a card rendered by `ExperienceTimeline`.
  */
-export const EXPERIENCE: Job[] = [
+export const EXPERIENCE: TimelineEntry[] = [
   {
     company: "SAP Labs India",
     role: "Software Developer",
@@ -103,7 +103,7 @@ export const EXPERIENCE: Job[] = [
  * Reuses the `Job` type — `highlights` is omitted for education entries
  * since degree cards show tags instead of bullet points.
  */
-export const EDUCATION: Job[] = [
+export const EDUCATION: TimelineEntry[] = [
   {
     company: "SRH Hochschule Heidelberg",
     role: "M.Sc. Applied Computer Science",

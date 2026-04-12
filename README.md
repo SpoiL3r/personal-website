@@ -1,9 +1,9 @@
 <h1 align="center">vaibhav-singh.in</h1>
 
-<p align="center">Personal portfolio and engineering profile for <strong>Vaibhav Singh</strong>.</p>
+<p align="center">Personal portfolio for <strong>Vaibhav Singh</strong> - Software Engineer at SAP.</p>
 
 <p align="center">
-  <a href="https://vaibhav-singh.in"><img src="https://img.shields.io/badge/live-vaibhav--singh.in-0f766e?style=flat-square" alt="Live site" /></a>
+  <a href="https://vaibhav-singh.in"><img src="https://img.shields.io/badge/live-vaibhav--singh.in-0969da?style=flat-square" alt="Live site" /></a>
   <a href="https://vercel.com/spoil3rs-projects/personal-website"><img src="https://img.shields.io/github/deployments/SpoiL3r/personal-website/production?label=vercel&logo=vercel&style=flat-square" alt="Vercel deployment" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-16a34a?style=flat-square" alt="License: MIT" /></a>
 </p>
@@ -17,23 +17,17 @@
 
 ## Overview
 
-This repository contains a production Next.js portfolio site focused on:
-
-- presenting backend and platform engineering experience clearly
-- combining static portfolio content with a small set of live data integrations
-- supporting multiple locales without losing type safety
-- keeping the site visually polished without turning the experience into a gimmick
-
-The site is intentionally opinionated: it is a personal portfolio, but it is built with the same quality bar applied to product work. The codebase prioritizes maintainability, predictable data flow, and clear separation between content, presentation, and external integrations.
+Single-page portfolio built with Next.js 16, focused on presenting backend engineering experience clearly. Combines static content with live data integrations (Steam, Lichess, Chess.com) and supports English, Hindi, and German.
 
 ## Highlights
 
-- One-page portfolio flow with dedicated sections for profile, experience, education, extracurriculars, and contact
-- Type-safe internationalization for English, Hindi, and German
-- Live gaming and chess cards backed by server routes
-- Lightweight achievement system persisted in `localStorage`
-- Sitemap generation and crawl-friendly metadata
-- Theme support and responsive layout across desktop and mobile
+- One-page flow: hero, about, experience timeline, education, extracurriculars, contact
+- Type-safe i18n (EN/HI/DE) with build-time key validation
+- Live gaming stats (Steam API) and chess ratings (Lichess + Chess.com)
+- Dark/light theme with View Transitions API reveal animation
+- Rate-limited API routes with HTTPS geo-IP lookup
+- Accessibility: skip-to-content, WCAG AA contrast, dynamic `lang` attribute
+- SEO: JSON-LD Person schema, OpenGraph/Twitter cards, static sitemap
 
 ## Stack
 
@@ -44,141 +38,48 @@ The site is intentionally opinionated: it is a personal portfolio, but it is bui
 | Language | TypeScript 5 |
 | Styling | Tailwind CSS v4 + CSS custom properties |
 | Animation | Framer Motion |
-| Theme | `next-themes` |
-| Icons | `lucide-react`, `react-icons` |
+| Icons | lucide-react (UI), react-icons (brand) |
 | Deployment | Vercel |
 
 ## Local Development
-
-### Prerequisites
-
-- Node.js 20+
-- npm
-
-### Setup
 
 ```bash
 git clone https://github.com/SpoiL3r/personal-website.git
 cd personal-website
 npm install
-```
-
-Create a local environment file:
-
-```bash
 cp .env.example .env.local
-```
-
-Start the dev server:
-
-```bash
 npm run dev
 ```
 
-Run quality checks:
+Quality checks:
 
 ```bash
-npm run lint
-npm run build
+npm test        # navModel unit tests
+npm run lint    # ESLint
+npm run build   # production build
 ```
 
 ## Environment Variables
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `STEAM_API_KEY` | Yes | Steam Web API key used by `/api/gaming-stats` |
-| `STEAM_ID` | Yes | Steam 64-bit account ID used for gaming data |
-| `VISITOR_DEV_COUNTRY` | No | Local development fallback for visitor-country tracking |
+| `STEAM_API_KEY` | No | Steam Web API key for `/api/gaming-stats` |
+| `STEAM_ID` | No | Steam 64-bit account ID |
+| `VISITOR_DEV_COUNTRY` | No | Local dev fallback for visitor tracking (default: "IN") |
 
-Without the Steam variables, the gaming widget falls back to its error state. The rest of the site still works.
+Without Steam variables, the gaming card shows manual overrides only. The rest of the site works fully.
 
 ## Project Structure
 
 ```text
-app/
-  api/
-    chess-stats/        Lichess + Chess.com aggregation
-    gaming-stats/       Steam playtime aggregation + manual overrides
-    visitors/           Visitor-country tracking
-  about/                Redirects to /#about
-  blog/                 Placeholder route
-  sitemap.ts            Sitemap generator
-
-components/
-  about/                About section and supporting UI
-  cards/                Chess and gaming cards
-  experience/           Experience timeline
-  home/                 Hero and system-knowledge sections
-  layout/               Navbar, footer, theme toggle, visitor widget
-  locale/               Locale switcher
-  sections/             Page-level section composition
-  trophy/               Trophy HUD and celebration UI
-  ui/                   Shared primitives
-
-lib/
-  constants/            Shared constants such as profile image source
-  contexts/             Locale and trophy state
-  data/                 Static content and configuration
-  hooks/                Client hooks for external data
-  locales/              Translation dictionaries and types
-
-docs/
-  DESIGN.md             Architecture and design notes
+app/                    Pages, API routes, global styles
+components/             UI components organized by section
+lib/                    Contexts, data, hooks, locales, utilities
+docs/                   Architecture notes (DESIGN.md)
+public/                 Static assets
 ```
 
-## External Integrations
-
-### Chess
-
-`/api/chess-stats` aggregates:
-
-- Lichess ratings and recent opening data
-- Chess.com ratings
-
-The route returns a normalized payload so the UI remains simple and presentation-focused.
-
-### Gaming
-
-`/api/gaming-stats` combines:
-
-- Steam-owned game playtime for configured titles
-- manual overrides for games without a reliable public API
-
-### Visitors
-
-`/api/visitors` records unique visitor countries. It prefers platform-provided geo headers and falls back to a simple IP lookup when necessary. Persistence is file-based with an in-memory fallback for restricted environments.
-
-## Content Model
-
-The site keeps content in code instead of a CMS on purpose.
-
-- professional experience and education live in `lib/data/experience.ts`
-- skills and technology categories live in `lib/data/techStack.ts`
-- translation strings live in `lib/locales/*.ts`
-
-This keeps the project easy to review, version, and refactor without introducing content-management overhead.
-
-## Design Notes
-
-The current visual direction is designed around:
-
-- restrained motion
-- consistent interaction hierarchy
-- strong typography and spacing
-- subtle glass/card surfaces without noisy chrome
-
-The goal is to feel like a high-quality engineering portfolio rather than a generic template or novelty microsite.
-
-Detailed architecture notes are in [docs/DESIGN.md](docs/DESIGN.md).
-
-## Deployment
-
-The site is deployed on Vercel. A typical flow is:
-
-1. open a feature branch
-2. push changes
-3. create a PR into `main`
-4. let Vercel build the preview and production deployments
+See [docs/DESIGN.md](docs/DESIGN.md) for detailed architecture documentation.
 
 ## License
 

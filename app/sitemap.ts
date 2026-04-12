@@ -6,15 +6,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: BASE_URL,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/experience`,
-      lastModified: new Date(),
+      lastModified: "2026-04-12",
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 1,
     },
   ];
 }

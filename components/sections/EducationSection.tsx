@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { GraduationCap } from "lucide-react";
 import Section from "./Section";
-import Tag from "@/components/ui/Tag";
 import LocationFlag from "@/components/ui/LocationFlag";
 import { EDUCATION } from "@/lib/data/experience";
 import { useLocale } from "@/lib/contexts/LocaleContext";
@@ -21,10 +21,8 @@ export default function EducationSection() {
         className="hud-card surface-static"
         style={{
           background: "var(--bg-card)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
           border: "1px solid var(--border)",
-          borderRadius: "16px",
+          borderRadius: "18px",
           overflow: "hidden",
         }}
       >
@@ -42,7 +40,7 @@ export default function EducationSection() {
               padding: "1.25rem 1.4rem",
               borderBottom: idx < EDUCATION.length - 1 ? "1px solid var(--border)" : "none",
               alignItems: "flex-start",
-              ["--row-accent" as string]: edu.accent ?? "var(--accent)",
+              ["--row-accent" as string]: "var(--accent)",
             }}
           >
             <div
@@ -50,28 +48,28 @@ export default function EducationSection() {
                 width: 44,
                 height: 44,
                 borderRadius: "10px",
-                background: "#ffffff",
-                border: `2px solid ${edu.accent ?? "var(--accent)"}`,
+                background: "var(--bg-card)",
+                border: "1px solid var(--border-strong)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 flexShrink: 0,
-                boxShadow: `0 4px 16px ${edu.accent ?? "var(--accent)"}33`,
+                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.15)",
                 overflow: "hidden",
                 padding: "4px",
               }}
             >
               {edu.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={edu.logo}
                   alt={`${edu.company} logo`}
                   width={32}
                   height={32}
                   style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                  unoptimized={edu.logo.endsWith(".svg")}
                 />
               ) : (
-                <GraduationCap size={18} color={edu.accent ?? "var(--accent)"} />
+                <GraduationCap size={18} color="var(--accent)" />
               )}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -99,7 +97,7 @@ export default function EducationSection() {
                   style={{
                     fontSize: "0.72rem",
                     fontFamily: "var(--font-mono, monospace)",
-                    color: edu.accent ?? "var(--accent)",
+                    color: "var(--text-dim)",
                   }}
                 >
                   {edu.period}
@@ -144,16 +142,9 @@ export default function EducationSection() {
                 </p>
               </div>
               {edu.tags && edu.tags.length > 0 && (
-                <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", marginTop: "0.6rem", minHeight: "1.5rem" }}>
-                  {edu.tags.map((tag, ti) => (
-                    <motion.span
-                      key={tag}
-                      initial={{ opacity: 0, x: -12 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.25, delay: ti * 0.04, ease: [0.16, 1, 0.3, 1] as const }}
-                    >
-                      <Tag label={tag} color={edu.accent} />
-                    </motion.span>
+                <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap", marginTop: "0.6rem" }}>
+                  {edu.tags.map((tag) => (
+                    <span key={tag} className="sk-chip">{tag}</span>
                   ))}
                 </div>
               )}

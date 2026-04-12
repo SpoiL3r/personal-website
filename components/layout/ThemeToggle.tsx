@@ -1,7 +1,8 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { BsMoonStarsFill, BsSun } from "react-icons/bs";
+import { useSyncExternalStore } from "react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 
 type DocWithVT = Document & {
   startViewTransition?: (cb: () => void) => { ready: Promise<void> };
@@ -9,8 +10,13 @@ type DocWithVT = Document & {
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
-  if (!theme) {
+  if (!mounted) {
     return (
       <button
         style={{ width: 36, height: 32, visibility: "hidden", flexShrink: 0 }}
@@ -69,33 +75,9 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label="Toggle theme"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "36px",
-        height: "32px",
-        borderRadius: "8px",
-        border: "1px solid var(--border-strong)",
-        background: "var(--bg-card)",
-        color: "var(--text)",
-        cursor: "pointer",
-        marginLeft: "0.3rem",
-        transition: "color 0.2s, border-color 0.2s, background 0.2s, transform 0.18s",
-        flexShrink: 0,
-      }}
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--accent)";
-        (e.currentTarget as HTMLButtonElement).style.color = "var(--accent)";
-        (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
-      }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-strong)";
-        (e.currentTarget as HTMLButtonElement).style.color = "var(--text)";
-        (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
-      }}
+      className="theme-toggle-btn"
     >
-      {isDark ? <BsSun size={16} /> : <BsMoonStarsFill size={15} />}
+      {isDark ? <Sun size={16} /> : <Moon size={15} />}
     </button>
   );
 }

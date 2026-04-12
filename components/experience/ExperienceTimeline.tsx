@@ -1,19 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import Tag from "@/components/ui/Tag";
 import LocationFlag from "@/components/ui/LocationFlag";
-import type { Job } from "@/lib/data/experience";
+import type { TimelineEntry } from "@/lib/data/experience";
 
 interface ExperienceTimelineProps {
-  jobs: Job[];
-  onComplete?: () => void;
+  jobs: TimelineEntry[];
 }
 
-export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimelineProps) {
-  const hasCompleted = useRef(false);
-
+export default function ExperienceTimeline({ jobs }: ExperienceTimelineProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       {jobs.map((exp, idx) => (
@@ -22,18 +18,13 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
           className="exp-row"
           initial={{ opacity: 0, x: -16 }}
           whileInView={{ opacity: 1, x: 0 }}
-          onViewportEnter={() => {
-            if (idx !== jobs.length - 1 || hasCompleted.current) return;
-            hasCompleted.current = true;
-            onComplete?.();
-          }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const, delay: idx * 0.08 }}
           style={{
             display: "flex",
             gap: "1.5rem",
             paddingBottom: idx === jobs.length - 1 ? 0 : "2.5rem",
-            ["--row-accent" as string]: exp.accent ?? "var(--accent)",
+            ["--row-accent" as string]: "var(--accent)",
           }}
         >
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, width: "44px" }}>
@@ -47,9 +38,9 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
                 width: "44px",
                 height: "44px",
                 borderRadius: "10px",
-                background: "#ffffff",
-                border: `2px solid ${exp.accent ?? "var(--accent)"}`,
-                boxShadow: `0 4px 16px ${exp.accent ?? "rgba(0,201,177,0.4)"}33`,
+                background: "var(--bg-card)",
+                border: "1px solid var(--border-strong)",
+                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.15)",
                 flexShrink: 0,
                 display: "flex",
                 alignItems: "center",
@@ -59,13 +50,13 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
               }}
             >
               {exp.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={exp.logo}
                   alt={`${exp.company} logo`}
                   width={32}
                   height={32}
                   style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                  unoptimized={exp.logo.endsWith(".svg")}
                 />
               ) : (
                 <span
@@ -73,7 +64,7 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
                     fontFamily: "var(--font-mono, monospace)",
                     fontWeight: 700,
                     fontSize: "0.9rem",
-                    color: exp.accent ?? "var(--accent)",
+                    color: "var(--accent)",
                   }}
                 >
                   {exp.company.charAt(0)}
@@ -89,7 +80,7 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
                 style={{
                   width: "1px",
                   flex: 1,
-                  background: `linear-gradient(to bottom, ${exp.accent ?? "var(--accent)"}, var(--border))`,
+                  background: "var(--border)",
                   marginTop: "8px",
                   transformOrigin: "top",
                 }}
@@ -106,10 +97,10 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
                 </p>
               </div>
               <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <p style={{ margin: 0, fontSize: "0.775rem", color: exp.accent ?? "var(--accent)", fontFamily: "var(--font-mono, monospace)" }}>
+                <p style={{ margin: 0, fontSize: "0.775rem", color: "var(--text-muted)", fontFamily: "var(--font-mono, monospace)" }}>
                   {exp.period}
                 </p>
-                <p style={{ margin: "0.2rem 0 0", fontSize: "0.775rem", color: "var(--text-dim)", display: "inline-flex", alignItems: "center" }}>
+                <p style={{ margin: "0.2rem 0 0", fontSize: "0.775rem", color: "var(--text-muted)", display: "inline-flex", alignItems: "center" }}>
                   <LocationFlag location={exp.location} />
                   {exp.location}
                 </p>
@@ -120,7 +111,7 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
               <ul style={{ listStyle: "none", padding: 0, margin: "0.75rem 0 0", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                 {exp.highlights.map((h, hi) => (
                   <li key={hi} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", fontSize: "0.825rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
-                    <span style={{ color: exp.accent ?? "var(--accent)", flexShrink: 0, marginTop: "1px", fontFamily: "var(--font-mono, monospace)", fontSize: "0.7rem" }}>
+                    <span style={{ color: "var(--text-dim)", flexShrink: 0, marginTop: "1px", fontFamily: "var(--font-mono, monospace)", fontSize: "0.7rem" }}>
                       {"\u2022"}
                     </span>
                     {h}
@@ -130,16 +121,9 @@ export default function ExperienceTimeline({ jobs, onComplete }: ExperienceTimel
             )}
 
             {exp.tags && exp.tags.length > 0 && (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "0.75rem", minHeight: "1.5rem" }}>
-                {exp.tags.map((tag, ti) => (
-                  <motion.span
-                    key={tag}
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.25, delay: ti * 0.04, ease: [0.16, 1, 0.3, 1] as const }}
-                  >
-                    <Tag label={tag} color={exp.accent} />
-                  </motion.span>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem", marginTop: "0.75rem" }}>
+                {exp.tags.map((tag) => (
+                  <span key={tag} className="sk-chip">{tag}</span>
                 ))}
               </div>
             )}

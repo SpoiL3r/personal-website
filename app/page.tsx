@@ -15,23 +15,22 @@ export default function Home() {
 
   return (
     <div className="site-wrap">
-      <section id="home" style={{ scrollMarginTop: "80px", paddingTop: "2rem" }}>
+      <section id="home" style={{ scrollMarginTop: "80px" }}>
         <HomeHero />
       </section>
-
-      <ExperienceSection />
 
       <Section
         id="about"
         title={t.sections.aboutTitle}
         subtitle={t.sections.aboutSubtitle}
       >
-        <AboutHero compact />
+        <AboutHero />
         <div style={{ marginTop: "2rem" }}>
           <SystemKnowledge />
         </div>
       </Section>
 
+      <ExperienceSection />
       <EducationSection />
       <ExtracurricularSection />
       <ContactSection />
