@@ -83,7 +83,7 @@ export default function AboutHero({ compact = false }: Props) {
             <p className={styles.compactLead}>{t.about.tagline}</p>
 
             <div className={styles.compactTagRow}>
-              <span className={styles.compactTag}>{t.status.experience}</span>
+              <span className={styles.compactTag}>{t.about.experienceBadge}</span>
               <span className={styles.compactTag}>{t.about.location}</span>
               <span className={styles.compactTag}>
                 {t.languages.english} | {t.languages.hindi} | {t.languages.german}
@@ -128,7 +128,7 @@ export default function AboutHero({ compact = false }: Props) {
               </div>
             </div>
             <div className={styles.metaRow}>
-              <span className={styles.metaItem}>{t.status.experience}</span>
+              <span className={styles.metaItem}>{t.about.experienceBadge}</span>
               <span className={styles.metaItem}>{t.about.location}</span>
               <span className={styles.metaItem}>{t.hero.currentCompany}</span>
             </div>
