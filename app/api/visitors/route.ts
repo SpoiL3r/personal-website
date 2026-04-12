@@ -21,6 +21,7 @@
 import { NextResponse } from "next/server";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -106,20 +107,23 @@ async function resolveCountry(req: Request): Promise<string | null> {
     return process.env.VISITOR_DEV_COUNTRY?.toUpperCase() || "IN";
   }
 
-  const url = `http://ip-api.com/json/${ip}?fields=countryCode`;
+  const url = `https://ipapi.co/${ip}/country/`;
 
   try {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) return null;
-    const body = (await res.json()) as { countryCode?: string };
-    return body.countryCode ? body.countryCode.toUpperCase() : null;
+    const code = (await res.text()).trim();
+    return code.length === 2 ? code.toUpperCase() : null;
   } catch {
     return null;
   }
 }
 
 /** Returns the current set of visited countries for the map widget. */
-export async function GET() {
+export async function GET(req: Request) {
+  if (!rateLimit(getClientIp(req), 60)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
   const set = await readCountries();
   return NextResponse.json({ countries: Array.from(set).sort() });
 }
@@ -130,6 +134,10 @@ export async function GET() {
  * new country code on first visit, or null if it was already known.
  */
 export async function POST(req: Request) {
+  if (!rateLimit(getClientIp(req), 30)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const code = await resolveCountry(req);
   if (!code) {
     // Could not resolve a country (e.g. private IP without VISITOR_DEV_COUNTRY).

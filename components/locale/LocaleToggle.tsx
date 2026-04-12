@@ -76,30 +76,7 @@ export default function LocaleToggle() {
         aria-expanded={open}
         aria-label={t.locale.selectLanguage}
         title={t.locale.language}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "0.35rem",
-          height: "32px",
-          padding: "0 0.55rem",
-          borderRadius: "8px",
-          border: "1px solid var(--border)",
-          background: "transparent",
-          color: "var(--text-muted)",
-          cursor: "pointer",
-          fontSize: "0.75rem",
-          fontFamily: "var(--font-mono, monospace)",
-          fontWeight: 600,
-          transition: "all 0.18s",
-        }}
-        onMouseEnter={(event) => {
-          event.currentTarget.style.borderColor = "var(--accent)";
-          event.currentTarget.style.color = "var(--text)";
-        }}
-        onMouseLeave={(event) => {
-          event.currentTarget.style.borderColor = "var(--border)";
-          event.currentTarget.style.color = "var(--text-muted)";
-        }}
+        className="locale-trigger"
       >
         <span style={{ display: "inline-flex", borderRadius: "2px", overflow: "hidden", lineHeight: 0 }}>
           <CurrentFlag />
@@ -148,32 +125,7 @@ export default function LocaleToggle() {
                   setLocale(code);
                   setOpen(false);
                 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.55rem",
-                  padding: "0.45rem 0.65rem",
-                  borderRadius: "6px",
-                  border: "none",
-                  background: active ? "var(--bg-hover)" : "transparent",
-                  color: active ? "var(--text)" : "var(--text-muted)",
-                  fontSize: "0.78rem",
-                  fontFamily: "var(--font-sans, inherit)",
-                  fontWeight: active ? 600 : 500,
-                  cursor: "pointer",
-                  textAlign: "left",
-                  transition: "background 0.15s, color 0.15s",
-                }}
-                onMouseEnter={(event) => {
-                  if (active) return;
-                  event.currentTarget.style.background = "var(--bg-hover)";
-                  event.currentTarget.style.color = "var(--text)";
-                }}
-                onMouseLeave={(event) => {
-                  if (active) return;
-                  event.currentTarget.style.background = "transparent";
-                  event.currentTarget.style.color = "var(--text-muted)";
-                }}
+                className={`locale-option${active ? " is-active" : ""}`}
               >
                 <span style={{ display: "inline-flex", borderRadius: "2px", overflow: "hidden", lineHeight: 0, flexShrink: 0 }}>
                   <Flag />

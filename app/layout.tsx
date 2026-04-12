@@ -1,15 +1,11 @@
 ﻿import type { Metadata } from "next";
-import { Geist, Geist_Mono, Caveat, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ThemeProvider from "@/components/layout/ThemeProvider";
-import TrophyHUD from "@/components/trophy/TrophyHUD";
-import PlatinumCelebration from "@/components/trophy/PlatinumCelebration";
-import VisitorFlags from "@/components/layout/VisitorFlags";
-import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { LocaleProvider } from "@/lib/contexts/LocaleContext";
-import { TrophyProvider } from "@/lib/contexts/TrophyContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,38 +17,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const caveat = Caveat({
-  variable: "--font-signature",
-  subsets: ["latin"],
-  weight: ["700"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-});
-
 export const metadata: Metadata = {
-  title: "Vaibhav Singh · Software Engineer",
+  title: "Vaibhav Singh - Software Engineer",
   description:
-    "Software Engineer with 5+ years building distributed systems and cloud-native applications. Currently at SAP Labs India.",
+    "Software engineer focused on backend systems, APIs, and reliable enterprise product infrastructure.",
   metadataBase: new URL("https://vaibhav-singh.in"),
   openGraph: {
-    title: "Vaibhav Singh · Software Engineer",
+    title: "Vaibhav Singh - Software Engineer",
     description:
-      "Software Engineer with 5+ years building distributed systems and cloud-native applications. Currently at SAP Labs India.",
+      "Software engineer focused on backend systems, APIs, and reliable enterprise product infrastructure.",
     type: "website",
     url: "https://vaibhav-singh.in",
     siteName: "Vaibhav Singh",
     locale: "en_US",
   },
   twitter: {
-    card: "summary",
-    title: "Vaibhav Singh · Software Engineer",
+    card: "summary_large_image",
+    title: "Vaibhav Singh - Software Engineer",
     description:
-      "Software Engineer with 5+ years building distributed systems and cloud-native applications. Currently at SAP Labs India.",
+      "Software engineer focused on backend systems, APIs, and reliable enterprise product infrastructure.",
   },
 };
 
@@ -63,35 +46,54 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${instrumentSerif.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body
+        suppressHydrationWarning
         style={{
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
         }}
       >
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`try {
+  const storedTheme = localStorage.getItem("theme");
+  const theme = storedTheme === "light" ? "light" : "dark";
+  const root = document.documentElement;
+  root.classList.toggle("light", theme === "light");
+  root.style.colorScheme = theme;
+} catch {
+  document.documentElement.classList.remove("light");
+  document.documentElement.style.colorScheme = "dark";
+}`}
+        </Script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Vaibhav Singh",
+              jobTitle: "Software Engineer",
+              worksFor: { "@type": "Organization", name: "SAP Labs India" },
+              url: "https://vaibhav-singh.in",
+              sameAs: [
+                "https://github.com/SpoiL3r",
+                "https://linkedin.com/in/vaibhavcs",
+              ],
+            }),
+          }}
+        />
         <ThemeProvider>
-          <TrophyProvider>
-            <LocaleProvider>
-              <Navbar />
-              {/* Trophy HUD — fixed overlay, offset below the navbar */}
-               <div className="trophy-hud-wrap" style={{ position: "fixed", top: "68px", right: "16px", zIndex: 40 }}>
-                 <TrophyHUD />
-               </div>
-              <main style={{ flex: 1 }}>{children}</main>
-              <Footer />
-              <ErrorBoundary>
-                <VisitorFlags />
-              </ErrorBoundary>
-              <PlatinumCelebration />
-            </LocaleProvider>
-          </TrophyProvider>
+          <LocaleProvider>
+            <a href="#home" className="skip-to-content">Skip to content</a>
+            <Navbar />
+            <main style={{ flex: 1 }}>{children}</main>
+            <Footer />
+          </LocaleProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
-
-

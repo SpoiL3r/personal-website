@@ -24,7 +24,7 @@ export default function Section({ id, title, subtitle, children }: Props) {
       id={id}
       style={{
         scrollMarginTop: "80px",
-        padding: "4rem 0 1rem",
+        padding: "3.5rem 0 1.5rem",
       }}
     >
       <motion.div
@@ -47,10 +47,10 @@ export default function Section({ id, title, subtitle, children }: Props) {
         {subtitle && (
           <p
             style={{
-              maxWidth: "560px",
-              fontSize: "0.95rem",
-              color: "var(--text-muted)",
-              margin: "0 0 2rem",
+              fontSize: "0.88rem",
+              color: "var(--text-dim)",
+              margin: "0 0 1.75rem",
+              letterSpacing: "-0.01em",
             }}
           >
             {subtitle}

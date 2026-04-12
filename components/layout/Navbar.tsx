@@ -1,56 +1,22 @@
-/**
- * Navbar — sticky site-wide navigation bar.
- *
- * Key behaviours:
- *  - Scroll-spy: position-based (not IntersectionObserver). Picks the section
- *    whose top is closest above an "active line" at ~30% of viewport height.
- *    Top-of-page (< 120px) always resolves to "home"; bottom-of-page always
- *    resolves to the last section.
- *  - Custom scroll animation: fastScrollTo() replaces native smooth-scroll
- *    with a 320ms ease-out-cubic rAF loop for snappier feel.
- *  - Active lock: clicking a nav item locks the highlighted section for 600ms
- *    so the scroll-spy doesn't flicker through intermediate sections.
- *  - Glass crossfade: navbar background and bottom border fade in over the
- *    first 80px of scroll via Framer Motion useTransform.
- *  - Scroll progress bar: a 2px accent-coloured bar at the very top of the
- *    viewport driven by useSpring(scrollYProgress).
- *  - Mobile: the resume button label is hidden via CSS class nav-resume-label;
- *    the left profile chip collapses down so the navbar still reads cleanly on small screens.
- */
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion";
-import { Download, Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import LocaleToggle from "@/components/locale/LocaleToggle";
 import { useLocale } from "@/lib/contexts/LocaleContext";
 import { GITHUB_AVATAR_URL } from "@/lib/constants/profile";
+import { NAV_ITEMS, hrefForNavItem, isNavItemActive, shouldSmoothScroll } from "@/lib/navigation/navModel.mjs";
 
-interface NavItem {
-  /** Anchor id on the home page (e.g. "about") OR an absolute route (e.g. "/blog"). */
-  target: string;
-  labelKey: "home" | "about" | "experience" | "education" | "offClock" | "blog" | "contact";
-}
-
-const NAV: NavItem[] = [
-  { target: "home",            labelKey: "home" },
-  { target: "experience",      labelKey: "experience" },
-  { target: "about",           labelKey: "about" },
-  { target: "education",       labelKey: "education" },
-  { target: "extracurricular", labelKey: "offClock" },
-  { target: "contact",         labelKey: "contact" },
-];
-
-/** Snappy custom scroll — 320ms ease-out, much faster than browser default. */
 function fastScrollTo(targetY: number) {
   const startY = window.scrollY;
   const dist = targetY - startY;
-  const duration = 320;
+  const duration = 300;
   const start = performance.now();
-  // ease-out cubic
   const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
   function step(now: number) {
@@ -59,47 +25,30 @@ function fastScrollTo(targetY: number) {
     window.scrollTo(0, startY + dist * ease(t));
     if (t < 1) requestAnimationFrame(step);
   }
+
   requestAnimationFrame(step);
 }
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { t } = useLocale();
   const [activeId, setActiveId] = useState<string>("home");
   const [mobileOpen, setMobileOpen] = useState(false);
-  // When the user clicks a nav item we lock the active state for ~600ms so the
-  // scroll-spy doesn't paint every section the scroll passes through.
   const isLocked = useRef(false);
   const lockTimerRef = useRef<number | null>(null);
 
-  // Scroll progress bar: springs toward the real scroll fraction for a smooth
-  // trailing effect. stiffness=400, damping=40 gives a quick but not instant chase.
-  const { scrollYProgress, scrollY } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 400, damping: 40 });
-  // Glass navbar background fades from invisible at 0px to 80% opacity at 80px.
-  const glassOpacity = useTransform(scrollY, [0, 20, 80], [0, 0.4, 0.8]);
-  // Bottom border mirrors the same fade-in so it only appears once scrolled.
-  const borderOpacity = useTransform(scrollY, [0, 20, 80], [0, 0.4, 1]);
-
-  // Scroll-spy: deterministic position-based spy (no IntersectionObserver).
-  // Picks whichever section's top edge is closest above an "active line" placed
-  // ~30% down the viewport. Top-of-page is special-cased to always = "home".
   useEffect(() => {
     if (pathname !== "/") return;
 
-    // Sort by actual DOM offsetTop so the active-line loop works correctly regardless
-    // of NAV array order. The page renders Experience before About in DOM order, but NAV
-    // lists About first — without this sort the `else break` exits early and Experience
-    // incorrectly wins when scrolled to About.
-    const ids = NAV
-      .filter(n => !n.target.startsWith("/"))
-      .map(n => n.target)
+    const ids = NAV_ITEMS
+      .map((item) => item.target)
+      .filter((item): item is string => Boolean(item))
       .sort((a, b) => {
         const topA = document.getElementById(a)?.offsetTop ?? Infinity;
         const topB = document.getElementById(b)?.offsetTop ?? Infinity;
         return topA - topB;
       });
+
     let ticking = false;
 
     function compute() {
@@ -107,25 +56,22 @@ export default function Navbar() {
       if (isLocked.current) return;
 
       const scrollY = window.scrollY;
-
-      // Top of page → always Home, regardless of section heights
       if (scrollY < 120) {
-        setActiveId(prev => (prev === "home" ? prev : "home"));
+        setActiveId((prev) => (prev === "home" ? prev : "home"));
         return;
       }
 
-      // Bottom of page → always last section
       const docH = document.documentElement.scrollHeight;
       const winH = window.innerHeight;
       if (scrollY + winH >= docH - 80) {
         const last = ids[ids.length - 1];
-        setActiveId(prev => (prev === last ? prev : last));
+        setActiveId((prev) => (prev === last ? prev : last));
         return;
       }
 
-      // Otherwise: pick the last section whose top is above the active line
-      const activeLine = scrollY + winH * 0.3;
+      const activeLine = scrollY + winH * 0.32;
       let current = ids[0];
+
       for (const id of ids) {
         const el = document.getElementById(id);
         if (!el) continue;
@@ -133,7 +79,8 @@ export default function Navbar() {
         if (top <= activeLine) current = id;
         else break;
       }
-      setActiveId(prev => (prev === current ? prev : current));
+
+      setActiveId((prev) => (prev === current ? prev : current));
     }
 
     function onScroll() {
@@ -142,200 +89,131 @@ export default function Navbar() {
       requestAnimationFrame(compute);
     }
 
-    compute(); // initial
+    compute();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
   }, [pathname]);
 
-  // Close mobile menu on scroll
   useEffect(() => {
     if (!mobileOpen) return;
-    function onScroll() { setMobileOpen(false); }
+
+    function onScroll() {
+      setMobileOpen(false);
+    }
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [mobileOpen]);
 
-  /** Returns true when a nav item should be rendered in its active state. */
-  function isActive(item: NavItem) {
-    if (item.target.startsWith("/")) {
-      // Absolute route: active when the full pathname matches or starts with target.
-      return pathname === item.target || pathname.startsWith(item.target + "/");
-    }
-    // Anchor: active only on the home page and when the scroll-spy agrees.
-    return pathname === "/" && activeId === item.target;
-  }
+  useEffect(() => {
+    return () => {
+      if (lockTimerRef.current !== null) window.clearTimeout(lockTimerRef.current);
+    };
+  }, []);
 
-  /** Builds the correct href — hash link for anchors, direct path for routes. */
-  function hrefFor(item: NavItem) {
-    return item.target.startsWith("/") ? item.target : `/#${item.target}`;
-  }
-
-  const profileTarget: NavItem = { target: "about", labelKey: "about" };
-
-  /** Handles nav link clicks: applies micro-bounce CSS, locks active state,
-   *  then either lets Next.js route or runs the custom scroll animation. */
-  function handleClick(e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) {
-    // Micro-bounce feedback: remove → force reflow → re-add so the CSS
-    // animation restarts even when the same link is clicked twice rapidly.
-    const linkEl = e.currentTarget;
-    linkEl.classList.remove("bounce");
-    void linkEl.offsetWidth; // trigger reflow
-    linkEl.classList.add("bounce");
-    window.setTimeout(() => linkEl.classList.remove("bounce"), 450);
-
-    // Close mobile menu
+  function handleClick(e: React.MouseEvent<HTMLAnchorElement>, item: (typeof NAV_ITEMS)[number]) {
     setMobileOpen(false);
 
-    // Absolute route — let Next.js handle navigation normally.
-    if (item.target.startsWith("/")) return;
-    // Anchor on the home page — intercept so we can use fastScrollTo instead.
-    e.preventDefault();
+    if (!shouldSmoothScroll(item, pathname) || !item.target) {
+      return;
+    }
 
-    // Lock the highlighted item immediately; unlock after 600ms once the
-    // scroll animation has finished so the spy doesn't flicker.
+    e.preventDefault();
     setActiveId(item.target);
     isLocked.current = true;
+
     if (lockTimerRef.current !== null) window.clearTimeout(lockTimerRef.current);
     lockTimerRef.current = window.setTimeout(() => {
       isLocked.current = false;
       lockTimerRef.current = null;
-    }, 600);
+    }, 500);
 
-    // If we're already on /, just scroll. Otherwise navigate to / first and
-    // let the hash cause a browser scroll (no custom animation for cross-page).
-    if (pathname !== "/") {
-      router.push(`/#${item.target}`);
-      return;
-    }
+    const nextUrl = new URL(window.location.href);
+    nextUrl.hash = item.target === "home" ? "" : item.target;
+    window.history.pushState({}, "", nextUrl);
 
     const el = document.getElementById(item.target);
-    if (!el) return;
-    // navH=56 is the exact height of this header (set via height: 56px in JSX).
-    // The extra 8px gives a comfortable visual gap above the section heading.
-    const navH = 56;
-    const top = el.getBoundingClientRect().top + window.scrollY - navH - 8;
+    const top = item.target === "home"
+      ? 0
+      : (el?.getBoundingClientRect().top ?? 0) + window.scrollY - 70;
+
     fastScrollTo(top);
   }
 
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="no-theme-transition"
+    <header
       style={{
         position: "sticky",
         top: 0,
         zIndex: 50,
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: "1px solid color-mix(in srgb, var(--border) 86%, transparent)",
+        background: "color-mix(in srgb, var(--nav-bg) 88%, transparent)",
+        backdropFilter: "blur(18px)",
+        WebkitBackdropFilter: "blur(18px)",
       }}
     >
-      {/* Glass bg crossfade layer */}
-      <motion.div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundColor: "var(--nav-bg)",
-          opacity: glassOpacity,
-          pointerEvents: "none",
-        }}
-      />
-      <motion.div
-        aria-hidden
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 1,
-          backgroundColor: "var(--border)",
-          opacity: borderOpacity,
-          pointerEvents: "none",
-        }}
-      />
-      {/* Scroll progress bar */}
-      <motion.div
-        aria-hidden
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 2,
-          background: "var(--accent)",
-          transformOrigin: "left",
-          scaleX,
-          zIndex: 9999,
-          pointerEvents: "none",
-        }}
-      />
-      <span className="nav-shimmer-line" aria-hidden />
       <div
         className="site-wrap"
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          height: "56px",
           gap: "1rem",
+          height: "64px",
         }}
       >
         <Link
-          href={hrefFor(profileTarget)}
-          onClick={e => handleClick(e, profileTarget)}
+          href={hrefForNavItem(NAV_ITEMS[0], pathname)}
+          onClick={(e) => handleClick(e, NAV_ITEMS[0])}
           className="nav-profile-link"
-          aria-label="Open About section"
+          aria-label="Go to home"
           style={{
-            width: "188px",
             minWidth: 0,
-            flexShrink: 0,
             display: "inline-flex",
             alignItems: "center",
-            gap: "0.6rem",
+            gap: "0.7rem",
             textDecoration: "none",
           }}
         >
           <span className="nav-profile-avatar" aria-hidden>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={GITHUB_AVATAR_URL}
               alt=""
+              width={38}
+              height={38}
               className="nav-profile-avatar-img"
               referrerPolicy="no-referrer"
             />
             VS
           </span>
           <span className="nav-profile-copy">
-            <span className="nav-profile-name">Vaibhav Singh</span>
-            <span className="nav-profile-meta">Profile</span>
+            <span className="nav-profile-name">{t.about.fullName}</span>
           </span>
         </Link>
 
-        {/* Desktop nav */}
         <nav
           className="nav-main"
+          aria-label="Primary"
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "0.1rem",
+            gap: "0.15rem",
             flex: 1,
             justifyContent: "center",
-            flexWrap: "nowrap",
           }}
         >
-          {NAV.map(item => {
-            const active = isActive(item);
+          {NAV_ITEMS.map((item) => {
+            const active = isNavItemActive(item, pathname, activeId);
             return (
               <Link
-                key={item.target}
-                href={hrefFor(item)}
-                onClick={e => handleClick(e, item)}
+                key={item.key}
+                href={hrefForNavItem(item, pathname)}
+                onClick={(e) => handleClick(e, item)}
                 className={`nav-link-v2 ${active ? "is-active" : ""}`}
               >
                 <span className="nav-link-label">{t.nav[item.labelKey]}</span>
@@ -345,39 +223,31 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right controls */}
-        <div className="nav-controls" style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
-          <a
-            href="/vaibhav_singh_cv.pdf"
-            download="Vaibhav_Singh_Resume.pdf"
-            className="btn btn-outline nav-resume-btn"
-            style={{
-              fontSize: "0.78rem",
-              padding: "0.3rem 0.75rem",
-              height: "32px",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.35rem",
-            }}
-          >
-            <Download size={13} />
-            <span className="nav-resume-label">{t.contact.downloadResume}</span>
-          </a>
-          <span className="nav-locale-desktop"><LocaleToggle /></span>
+        <div
+          className="nav-controls"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.45rem",
+            flexShrink: 0,
+          }}
+        >
+          <span className="nav-locale-desktop">
+            <LocaleToggle />
+          </span>
           <ThemeToggle />
-          {/* Hamburger — mobile only */}
           <button
             className="nav-hamburger"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMobileOpen(v => !v)}
+            onClick={() => setMobileOpen((value) => !value)}
             style={{
               display: "none",
               background: "none",
               border: "none",
               cursor: "pointer",
               color: "var(--text)",
-              padding: "0.25rem",
-              borderRadius: "6px",
+              padding: "0.35rem",
+              borderRadius: "8px",
               flexShrink: 0,
             }}
           >
@@ -386,69 +256,61 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             key="mobile-menu"
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             style={{
               position: "absolute",
-              top: "56px",
+              top: "64px",
               left: 0,
               right: 0,
               background: "var(--bg-card)",
               borderBottom: "1px solid var(--border)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              zIndex: 49,
+              boxShadow: "0 16px 40px rgba(0, 0, 0, 0.18)",
               padding: "0.75rem 1rem 1rem",
               display: "flex",
               flexDirection: "column",
-              gap: "0.25rem",
+              gap: "0.35rem",
             }}
           >
-            {NAV.map(item => {
-              const active = isActive(item);
+            {NAV_ITEMS.map((item) => {
+              const active = isNavItemActive(item, pathname, activeId);
               return (
                 <Link
-                  key={item.target}
-                  href={hrefFor(item)}
-                  onClick={e => handleClick(e, item)}
+                  key={item.key}
+                  href={hrefForNavItem(item, pathname)}
+                  onClick={(e) => handleClick(e, item)}
                   style={{
-                    padding: "0.6rem 0.75rem",
-                    borderRadius: "8px",
+                    padding: "0.7rem 0.8rem",
+                    borderRadius: "10px",
                     fontSize: "0.92rem",
-                    fontWeight: active ? 600 : 400,
-                    color: active ? "var(--accent)" : "var(--text)",
+                    fontWeight: active ? 600 : 500,
+                    color: active ? "var(--text)" : "var(--text-muted)",
                     background: active ? "var(--bg-hover)" : "transparent",
                     textDecoration: "none",
-                    transition: "background 0.15s, color 0.15s",
                   }}
                 >
                   {t.nav[item.labelKey]}
                 </Link>
               );
             })}
-            <div style={{ borderTop: "1px solid var(--border)", marginTop: "0.5rem", paddingTop: "0.75rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <div
+              style={{
+                borderTop: "1px solid var(--border)",
+                marginTop: "0.5rem",
+                paddingTop: "0.75rem",
+              }}
+            >
               <LocaleToggle />
-              <a
-                href="/vaibhav_singh_cv.pdf"
-                download="Vaibhav_Singh_Resume.pdf"
-                className="btn btn-outline"
-                style={{ fontSize: "0.78rem", padding: "0.3rem 0.75rem", height: "32px", display: "inline-flex", alignItems: "center", gap: "0.35rem" }}
-                onClick={() => setMobileOpen(false)}
-              >
-                <Download size={13} />
-                {t.contact.downloadResume}
-              </a>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

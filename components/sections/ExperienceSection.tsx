@@ -5,11 +5,9 @@ import Section from "./Section";
 import ExperienceTimeline from "@/components/experience/ExperienceTimeline";
 import { EXPERIENCE } from "@/lib/data/experience";
 import { useLocale } from "@/lib/contexts/LocaleContext";
-import { useTrophies } from "@/lib/contexts/TrophyContext";
 
 export default function ExperienceSection() {
   const { t } = useLocale();
-  const { unlock } = useTrophies();
 
   return (
     <Section
@@ -21,14 +19,12 @@ export default function ExperienceSection() {
         className="hud-card surface-static"
         style={{
           background: "var(--bg-card)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
           border: "1px solid var(--border)",
-          borderRadius: "16px",
+          borderRadius: "18px",
           padding: "1.75rem",
         }}
       >
-        <ExperienceTimeline jobs={EXPERIENCE} onComplete={() => unlock("exp_deep_dive")} />
+        <ExperienceTimeline jobs={EXPERIENCE} />
       </div>
     </Section>
   );

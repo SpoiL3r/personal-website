@@ -80,6 +80,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   function setLocale(next: Locale) {
     setLocaleState(next);
     localStorage.setItem(STORAGE_KEY, next);
+    document.documentElement.lang = next;
   }
 
   const t = DICTIONARIES[locale];

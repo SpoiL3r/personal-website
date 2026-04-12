@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
-const STEAM_API_KEY = process.env.STEAM_API_KEY!;
-const STEAM_ID = process.env.STEAM_ID!;
+const STEAM_API_KEY = process.env.STEAM_API_KEY;
+const STEAM_ID = process.env.STEAM_ID;
 
 // Games to pull from Steam (appid → display config)
 const STEAM_APPS = [
@@ -58,12 +59,17 @@ async function getSteamHours() {
     .filter((g): g is NonNullable<typeof g> => g !== null);
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  if (!rateLimit(getClientIp(req), 60)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
+  if (!STEAM_API_KEY || !STEAM_ID) {
+    return NextResponse.json({ games: [...MANUAL_GAMES].sort((a, b) => b.hours - a.hours) });
+  }
+
   const steamGames = await getSteamHours() ?? [];
-
   const games = [...steamGames, ...MANUAL_GAMES];
-
-  // Sort by hours descending
   games.sort((a, b) => b.hours - a.hours);
 
   return NextResponse.json({ games });

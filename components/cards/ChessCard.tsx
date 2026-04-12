@@ -1,31 +1,13 @@
 /**
- * ChessCard — displays live chess ratings from Lichess and Chess.com side-by-side.
- *
- * Data flow:
- *   1. On mount, fetches /api/chess-stats (server route that calls both platform APIs).
- *   2. While loading, three skeleton bars are shown (pulse-skeleton animation).
- *   3. If both platforms fail to return data, a localised error message is shown.
- *   4. If at least one platform responds, ratings for bullet / blitz / rapid are
- *      rendered in a 3-column grid (label | Lichess | Chess.com).
- *   5. Missing ratings from a platform render as a dash "-" rather than crashing.
- *   6. If the API returns favouriteOpenings, a bonus section lists openings by colour.
- *
- * The onLoaded callback is forwarded to the parent (e.g. OffClock section) so it
- * can coordinate staggered reveal animations after async data arrives.
+ * ChessCard displays live chess ratings from Lichess and Chess.com side-by-side.
  */
 "use client";
 
-import { useEffect } from "react";
-import { Crown, Shield, Sword } from "lucide-react";
-import { HiArrowUpRight } from "react-icons/hi2";
+import { ArrowUpRight, Crown, Shield, Sword } from "lucide-react";
 import { useLocale } from "@/lib/contexts/LocaleContext";
+import { useTheme } from "@/components/layout/ThemeProvider";
 import { useChessStats } from "@/lib/hooks/useChessStats";
 
-/**
- * Renders chess moves in Lichess style:
- * move numbers are dim/small, white moves are bold, black moves are muted.
- * Input: "1.d4 d5 2.Bf4 Nf6" — already formatted by the API.
- */
 function ChessMoves({ moves }: { moves: string }) {
   const tokens = moves.split(" ");
   return (
@@ -33,7 +15,6 @@ function ChessMoves({ moves }: { moves: string }) {
       {tokens.map((token, i) => {
         const dotIdx = token.indexOf(".");
         if (dotIdx > 0 && /^\d/.test(token)) {
-          // "1.d4" → dim number + bold white move
           const num = token.slice(0, dotIdx + 1);
           const move = token.slice(dotIdx + 1);
           return (
@@ -44,10 +25,11 @@ function ChessMoves({ moves }: { moves: string }) {
             </span>
           );
         }
-        // Black move — muted, space before
+
         return (
           <span key={i} style={{ color: "var(--text-muted)", marginRight: "0.15rem" }}>
-            {" "}{token}
+            {" "}
+            {token}
           </span>
         );
       })}
@@ -55,45 +37,30 @@ function ChessMoves({ moves }: { moves: string }) {
   );
 }
 
-/** Props for the ChessCard component. */
-interface Props {
-  /** Called once after stats have been fetched and state has been set. */
-  onLoaded?: () => void;
+function ratingColor(rating: number, isDark: boolean) {
+  if (isDark) {
+    if (rating >= 1500) return "#f2f3f5";
+    if (rating >= 1200) return "#c3c8cf";
+    if (rating >= 900) return "#9aa1aa";
+    return "#8b949e";
+  }
+  if (rating >= 1500) return "#0550ae";
+  if (rating >= 1200) return "#0969da";
+  if (rating >= 900) return "#218bff";
+  return "#59636e";
 }
 
-/**
- * Maps a numeric chess rating to a display colour.
- * Thresholds are loosely based on Lichess rating bands:
- *   ≥ 1500 → green  (strong club player)
- *   ≥ 1200 → orange (intermediate)
- *   ≥ 900  → blue   (beginner/casual)
- *   < 900  → grey   (new / unrated)
- */
-function ratingColor(rating: number) {
-  if (rating >= 1500) return "#3fb950";
-  if (rating >= 1200) return "#f89820";
-  if (rating >= 900) return "#58a6ff";
-  return "#8b949e";
-}
-
-/** Renders a side-by-side Lichess / Chess.com rating comparison card. */
-export default function ChessCard({ onLoaded }: Props) {
+export default function ChessCard() {
   const { t } = useLocale();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const { stats, loading } = useChessStats();
 
-  // Row definitions for the rating grid — order determines visual order.
   const controls = [
     { key: "bullet" as const, label: t.extracurricular.bullet, icon: <Sword size={13} /> },
     { key: "blitz" as const, label: t.extracurricular.blitz, icon: <Shield size={13} /> },
     { key: "rapid" as const, label: t.extracurricular.rapid, icon: <Crown size={13} /> },
   ];
-
-  // Notify parent once data has settled so it can coordinate reveal animations.
-  // The hook handles fetch cancellation on unmount automatically.
-  useEffect(() => {
-    if (!loading) onLoaded?.();
-  }, [loading, onLoaded]);
-
 
   if (loading) {
     return (
@@ -158,15 +125,15 @@ export default function ChessCard({ onLoaded }: Props) {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "#111827",
-              color: "#f8fafc",
+              background: "var(--bg-terminal)",
+              color: "var(--text)",
               fontSize: "0.55rem",
               fontWeight: 700,
             }}
           >
             L
           </span>
-          LICHESS <HiArrowUpRight size={9} />
+          LICHESS <ArrowUpRight size={9} />
         </a>
         <a
           href={stats.chesscom?.url}
@@ -192,15 +159,15 @@ export default function ChessCard({ onLoaded }: Props) {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "#16a34a",
-              color: "#f8fafc",
+              background: "var(--bg-hover)",
+              color: "var(--text)",
               fontSize: "0.55rem",
               fontWeight: 700,
             }}
           >
             C
           </span>
-          CHESS.COM <HiArrowUpRight size={9} />
+          CHESS.COM <ArrowUpRight size={9} />
         </a>
       </div>
 
@@ -243,7 +210,7 @@ export default function ChessCard({ onLoaded }: Props) {
                       fontSize: "1rem",
                       fontWeight: 700,
                       fontFamily: "var(--font-mono, monospace)",
-                      color: ratingColor(rating),
+                      color: ratingColor(rating, isDark),
                     }}
                   >
                     {rating}
@@ -303,7 +270,7 @@ export default function ChessCard({ onLoaded }: Props) {
             width: 6,
             height: 6,
             borderRadius: "50%",
-            backgroundColor: "#3fb950",
+            backgroundColor: "var(--accent)",
             animation: "pulse-dot 2s ease-in-out infinite",
             flexShrink: 0,
           }}
@@ -344,7 +311,7 @@ export default function ChessCard({ onLoaded }: Props) {
             {t.extracurricular.favouriteOpenings}
           </div>
           {(["white", "black"] as const).map((color, index) => {
-            const ops = stats.favouriteOpenings![color];
+            const ops = stats.favouriteOpenings?.[color];
             if (!ops?.length) return null;
 
             return (
@@ -370,8 +337,8 @@ export default function ChessCard({ onLoaded }: Props) {
                       width: 18,
                       height: 18,
                       borderRadius: "4px",
-                      background: color === "white" ? "#f0f0f0" : "#1a1a1a",
-                      color: color === "white" ? "#1a1a1a" : "#f0f0f0",
+                      background: color === "white" ? "var(--text)" : "var(--bg-terminal)",
+                      color: color === "white" ? "var(--bg)" : "var(--text)",
                       border: "1px solid var(--border-strong)",
                       display: "inline-flex",
                       alignItems: "center",
@@ -396,11 +363,7 @@ export default function ChessCard({ onLoaded }: Props) {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {ops.map((op, i) => {
-                    // Show just the variation when the name has a colon:
-                    // "Queen's Pawn Game: London System" → "London System"
-                    const displayName = op.name.includes(": ")
-                      ? op.name.split(": ").slice(1).join(": ")
-                      : op.name;
+                    const displayName = op.name.includes(": ") ? op.name.split(": ").slice(1).join(": ") : op.name;
                     return (
                       <div
                         key={i}
@@ -413,14 +376,23 @@ export default function ChessCard({ onLoaded }: Props) {
                         }}
                       >
                         <div style={{ minWidth: 0, flex: 1 }}>
-                          <span style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text)" }}>
-                            {displayName}
-                          </span>
+                          <span style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text)" }}>{displayName}</span>
                           {op.moves && (
-                            <span style={{ color: "var(--text-dim)" }}>{": "}<ChessMoves moves={op.moves} /></span>
+                            <span style={{ color: "var(--text-dim)" }}>
+                              {": "}
+                              <ChessMoves moves={op.moves} />
+                            </span>
                           )}
                         </div>
-                        <span style={{ fontSize: "0.62rem", fontFamily: "var(--font-mono, monospace)", color: "var(--text-dim)", whiteSpace: "nowrap", flexShrink: 0 }}>
+                        <span
+                          style={{
+                            fontSize: "0.62rem",
+                            fontFamily: "var(--font-mono, monospace)",
+                            color: "var(--text-dim)",
+                            whiteSpace: "nowrap",
+                            flexShrink: 0,
+                          }}
+                        >
                           {op.games} {t.extracurricular.gamesSuffix}
                         </span>
                       </div>
