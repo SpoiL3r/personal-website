@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowUpRight, Download, Mail } from "lucide-react";
+import { ArrowUpRight, Mail } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import Section from "./Section";
 import { useLocale } from "@/lib/contexts/LocaleContext";
@@ -24,10 +24,6 @@ export default function ContactSection() {
           <a href="mailto:think.vaibhavsingh@gmail.com" className="btn btn-primary">
             <Mail size={16} />
             {t.contact.emailMe}
-          </a>
-          <a href="/vaibhav_singh_cv.pdf" download="Vaibhav_Singh_Resume.pdf" className="btn btn-outline">
-            <Download size={16} />
-            {t.contact.downloadResume}
           </a>
         </div>
 

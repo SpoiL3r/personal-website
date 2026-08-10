@@ -78,7 +78,6 @@ export const hi: Translations = {
   contact: {
     intro: "इंजीनियरिंग, product work या किसी दिलचस्प backend problem पर बात करने में खुशी होगी।",
     emailMe: "मुझे ईमेल करें",
-    downloadResume: "रिज़्यूमे",
     locationLine: "बेंगलुरु, भारत - Remote / Hybrid के लिए खुला",
   },
   social: {

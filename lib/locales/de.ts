@@ -78,7 +78,6 @@ export const de: Translations = {
   contact: {
     intro: "Ich spreche gern uber Engineering, Produktarbeit oder interessante Backend-Probleme.",
     emailMe: "Schreib mir",
-    downloadResume: "Lebenslauf",
     locationLine: "Bengaluru, Indien - offen fur Remote / Hybrid",
   },
   social: {

@@ -78,7 +78,6 @@ export const en: Translations = {
   contact: {
     intro: "Happy to talk about engineering, product work, or interesting backend problems.",
     emailMe: "Email me",
-    downloadResume: "Resume",
     locationLine: "Bengaluru, India - Open to remote / hybrid",
   },
   social: {

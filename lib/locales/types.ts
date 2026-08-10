@@ -81,7 +81,6 @@ export interface Translations {
   contact: {
     intro: string;
     emailMe: string;
-    downloadResume: string;
     locationLine: string;
   };
   social: {
