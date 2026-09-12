@@ -19,7 +19,8 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        style={{ width: 36, height: 32, visibility: "hidden", flexShrink: 0 }}
+        className="icon-btn"
+        style={{ visibility: "hidden" }}
         aria-hidden
         tabIndex={-1}
       />
@@ -75,9 +76,9 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label="Toggle theme"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="theme-toggle-btn"
+      className="icon-btn"
     >
-      {isDark ? <Sun size={16} /> : <Moon size={15} />}
+      {isDark ? <Sun size={16} strokeWidth={1.5} /> : <Moon size={16} strokeWidth={1.5} />}
     </button>
   );
 }

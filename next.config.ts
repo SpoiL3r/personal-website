@@ -9,8 +9,6 @@ const nextConfig: NextConfig = {
       { hostname: "github.com" },
       { hostname: "upload.wikimedia.org" },
       { hostname: "www.google.com" },
-      { hostname: "media.steampowered.com" },
-      { hostname: "cdn.cloudflare.steamstatic.com" },
     ],
   },
 };
