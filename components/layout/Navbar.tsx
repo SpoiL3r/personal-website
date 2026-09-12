@@ -155,6 +155,7 @@ export default function Navbar() {
                 href={hrefForNavItem(item, pathname)}
                 onClick={(e) => handleClick(e, item)}
                 className={`nav-link ${active ? "is-active" : ""}`}
+                aria-current={active ? "location" : undefined}
               >
                 {t.nav[item.labelKey]}
               </Link>
@@ -187,6 +188,7 @@ export default function Navbar() {
               href={hrefForNavItem(item, pathname)}
               onClick={(e) => handleClick(e, item)}
               className={active ? "is-active" : undefined}
+              aria-current={active ? "location" : undefined}
             >
               {t.nav[item.labelKey]}
             </Link>

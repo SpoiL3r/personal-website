@@ -50,6 +50,7 @@ export interface Translations {
     copyright: string;
     email: string;
     builtWith: string;
+    updated: string;
   };
   locale: {
     selectLanguage: string;

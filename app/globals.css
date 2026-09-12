@@ -61,6 +61,7 @@
   --wrap:          1120px;
   --pad-x:         40px;
   --gutter:        24px;
+  --read-line:     32%;  /* must match the 0.32 in Navbar.tsx compute() */
   --anchor-offset: calc(var(--nav-h) + var(--s-24));
 
   /* Motion ─ two durations, one curve */
@@ -564,19 +565,42 @@ a { color: var(--ink); }
   text-decoration-color: var(--rule-ui);
 }
 
-.nav-links { display: flex; align-items: center; gap: var(--s-32); }
+.nav-links { display: flex; align-self: stretch; align-items: stretch; gap: var(--s-32); }
 .nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* .nav-inner is exactly --nav-h tall and the header's own border-bottom
+     sits in the 1px below it, so a stretched link plus -1px lands its marker
+     ON that rule instead of beside it. This -1px is the alignment knob. */
+  margin-bottom: -1px;
   font-size: var(--t-meta);
   font-weight: 400;
   color: var(--text-2);
   text-decoration: none;
-  padding-bottom: var(--s-4);
-  border-bottom: 1px solid transparent;
   white-space: nowrap;
-  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  transition: color var(--t-fast) var(--ease);
 }
-.nav-link:hover { color: var(--ink); border-bottom-color: var(--rule-ui); }
-.nav-link.is-active { color: var(--ink); border-bottom-color: var(--ink); }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--rule-ui);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-fast) var(--ease);
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link:hover::after,
+.nav-link:focus-visible::after { transform: scaleX(1); }
+.nav-link.is-active { color: var(--ink); }
+.nav-link.is-active::after { transform: scaleX(1); background: var(--ink); }
+/* A full-height link pinned to the top of a sticky bar clips a 3px outside
+   ring against the viewport edge, so this one ring is drawn inside. */
+.nav-link:focus-visible { outline-offset: -3px; }
 
 .nav-controls { display: flex; align-items: center; gap: var(--s-8); flex-shrink: 0; }
 .nav-hamburger { display: none; }
@@ -677,13 +701,11 @@ a { color: var(--ink); }
   .footer-inner { flex-direction: column; align-items: flex-start; gap: var(--s-16); }
 }
 
-/* ── Theme crossfade ────────────────────────────────────── */
+/* ── Theme wipe ─────────────────────────────────────────── */
+/* Both UA defaults are removed: the scripted clip in ThemeToggle drives the
+   new snapshot, and the old one must stay opaque underneath until covered. */
 ::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 180ms;
-  animation-timing-function: linear;
-  mix-blend-mode: normal;
-}
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 
 .theme-transitioning *,
 .theme-transitioning *::before,
@@ -691,3 +713,77 @@ a { color: var(--ink); }
   transition: background-color 180ms ease, border-color 180ms ease, color 120ms ease !important;
   transition-delay: 0ms !important;
 }
+
+/* ── The reading line ───────────────────────────────────── */
+/* Navbar.tsx already decides what you are reading at `winH * 0.32`. This is
+   the only thing on the page that makes that invisible constant visible. */
+@keyframes tile-pass {
+  0%, 100% { border-color: var(--rule-ui); }
+  40%, 60% { border-color: var(--ink); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Longhands only: the `animation` shorthand resets animation-timeline. */
+    .row-exp .tile {
+      animation-name: tile-pass;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view(block);
+      /* Over `cover` the subject runs y = V to y = -H, so the reading line at
+         0.32V lands near p = 68%. The 10% window is ~170px of scroll at
+         V = 800, narrower than the Experience row pitch, so one tile peaks at
+         a time. Narrow the 10% if two ever swell together. */
+      animation-range: cover calc(100% - var(--read-line) - 10%)
+                       cover calc(100% - var(--read-line) + 10%);
+    }
+  }
+}
+
+/* ── Rows answer the pointer ────────────────────────────── */
+.tile img { transition: filter var(--t-fast) var(--ease); }
+.row-exp .row-mark::after { transition: background-color var(--t-fast) var(--ease); }
+.row .meta-date { transition: color var(--t-fast) var(--ease); }
+
+/* Fenced so a scroll-tap cannot strand a hover state on a phone. */
+@media (hover: hover) {
+  /* `.row .meta-date`, not `.row .row-aside .meta-date`: the SAP SE row
+     suppresses its aggregate period and renders its dates inside
+     `.roles li .meta-date`, so the narrower selector would light only half
+     the dates on the one row that has a progression. */
+  .row:hover .meta-date { color: var(--text-2); }
+  .row:hover .tile img { filter: grayscale(1) contrast(1.25); }
+  .row-exp:hover .row-mark::after { background: var(--rule-ui); }
+}
+
+/* ── Detent ─────────────────────────────────────────────── */
+/* Every control engages at 0ms and releases over --t-fast. No new duration:
+   `transition-duration: 0s` on :active kills the engage, the base rule
+   supplies the release. That asymmetry is what reads as a switch rather
+   than an animation. Must stay last - these tie with :hover on specificity
+   and win on source order only. */
+.btn:active,
+.icon-btn:active,
+.locale-trigger:active,
+.locale-option:active,
+.link:active,
+.link-quiet:active,
+.nav-link:active { transition-duration: 0s; }
+
+/* --text-2 is a third step down the same ink ramp, so the press reads from
+   rest (--ink) AND from hover (--ink-hover) - which is what makes it work on
+   touch, where there is no hover. 8.57:1 on --paper in both themes. */
+.btn-primary:active { background: var(--text-2); border-color: var(--text-2); color: var(--paper); }
+.btn-outline:active { border-color: var(--ink); background: var(--paper-raised); color: var(--ink); }
+.icon-btn:active,
+.locale-trigger:active { color: var(--ink); border-color: var(--ink); }
+.locale-option:active { color: var(--ink); }
+.link:active { text-decoration-thickness: 2px; text-decoration-color: currentColor; }
+.link-quiet:active { color: var(--ink); }
+.nav-link:active { color: var(--ink); }
+.nav-link:active::after { transform: scaleX(1); transition-duration: 0s; }
+.nav-sheet a:active { color: var(--ink); }
+
+/* 1px of seating, on the 44px controls only. Outside every transition list
+   on purpose: instant down, instant up, not a duration at all. */
+.btn:active { transform: translateY(1px); }

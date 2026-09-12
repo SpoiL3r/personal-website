@@ -2,6 +2,10 @@
 
 import { useLocale } from "@/lib/contexts/LocaleContext";
 
+/** Build date, inlined at compile time. Not the content-edit date - a
+  * dependency bump moves it too. */
+const BUILT = process.env.NEXT_PUBLIC_BUILD_DATE ?? "";
+
 export default function Footer() {
   const { t } = useLocale();
 
@@ -15,7 +19,13 @@ export default function Footer() {
     <footer className="footer">
       <div className="site-wrap footer-inner">
         <p className="meta-date">
-          {"©"} {new Date().getFullYear()} {t.footer.copyright}. {t.footer.builtWith}
+          {"©"} {BUILT.slice(0, 4)} {t.footer.copyright}. {t.footer.builtWith}
+          {BUILT && (
+            <>
+              {" "}
+              {t.footer.updated} <time dateTime={BUILT}>{BUILT}</time>
+            </>
+          )}
         </p>
 
         <div className="footer-links">

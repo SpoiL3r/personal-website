@@ -43,6 +43,7 @@ export const hi: Translations = {
     copyright: "वैभव सिंह",
     email: "ईमेल",
     builtWith: "Next.js और TypeScript के साथ बनाया गया।",
+    updated: "अपडेटेड",
   },
   locale: {
     selectLanguage: "भाषा चुनें",

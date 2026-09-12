@@ -43,6 +43,7 @@ export const de: Translations = {
     copyright: "Vaibhav Singh",
     email: "E-Mail",
     builtWith: "Gebaut mit Next.js und TypeScript.",
+    updated: "Aktualisiert",
   },
   locale: {
     selectLanguage: "Sprache wahlen",
