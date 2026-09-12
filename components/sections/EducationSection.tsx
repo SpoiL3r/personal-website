@@ -10,12 +10,7 @@ export default function EducationSection() {
   const { t } = useLocale();
 
   return (
-    <Section
-      id="education"
-      label={t.nav.education}
-      title={t.sections.educationTitle}
-      subtitle={t.sections.educationSubtitle}
-    >
+    <Section id="education" rank="minor" title={t.nav.education}>
       <ul className="rows">
         {EDUCATION.map((edu) => (
           <li key={edu.company} className="row row-edu">

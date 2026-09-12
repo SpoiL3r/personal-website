@@ -22,7 +22,6 @@ export interface Translations {
     roleLine: string;
   };
   systemKnowledge: {
-    sectionLabel: string;
     coreLanguages: string;
     distributedSystems: string;
     data: string;
@@ -35,13 +34,7 @@ export interface Translations {
     location: string;
   };
   sections: {
-    stackSubtitle: string;
-    experienceTitle: string;
     experienceSubtitle: string;
-    educationTitle: string;
-    educationSubtitle: string;
-    contactTitle: string;
-    contactSubtitle: string;
   };
   contact: {
     intro: string;

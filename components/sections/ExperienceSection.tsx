@@ -12,8 +12,8 @@ export default function ExperienceSection() {
   return (
     <Section
       id="experience"
-      label={t.nav.experience}
-      title={t.sections.experienceTitle}
+      rank="primary"
+      title={t.nav.experience}
       subtitle={t.sections.experienceSubtitle}
     >
       <ExperienceTimeline jobs={EXPERIENCE} />

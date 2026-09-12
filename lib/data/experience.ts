@@ -75,13 +75,6 @@ export const EDUCATION: TimelineEntry[] = [
     period: "Oct 2018 → Dec 2020",
     location: "Heidelberg, Germany",
     logo: "https://www.google.com/s2/favicons?domain=hochschule-heidelberg.de&sz=128",
-    tags: [
-      "Distributed Systems",
-      "Software Development Practice",
-      "Advanced Databases",
-      "Software Architecture and Development",
-      "IT-Security",
-    ],
   },
   {
     company: "Dr. APJ Abdul Kalam Technical University",
@@ -89,12 +82,5 @@ export const EDUCATION: TimelineEntry[] = [
     period: "Jun 2012 → Jun 2016",
     location: "Greater Noida, India",
     logo: "/logos/aktu.png",
-    tags: [
-      "Data Structures",
-      "Operating System",
-      "Database Management System",
-      "Design and Analysis of Algorithms",
-      "Computer Networks",
-    ],
   },
 ];

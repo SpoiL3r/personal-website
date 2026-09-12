@@ -15,7 +15,6 @@ export const en: Translations = {
       "I build Java and Spring Boot services for enterprise products, with recent work across APIs, caching, document workflows, and multi-tenant data flows at SAP.",
   },
   systemKnowledge: {
-    sectionLabel: "System Knowledge",
     coreLanguages: "Core Languages",
     distributedSystems: "Distributed Systems",
     data: "Data",
@@ -28,13 +27,7 @@ export const en: Translations = {
     location: "Bengaluru, India",
   },
   sections: {
-    stackSubtitle: "Tools and systems I work with day to day.",
-    experienceTitle: "Selected Experience",
     experienceSubtitle: "Backend systems, APIs, and platform work across SAP, Daimler, and GlobalLogic.",
-    educationTitle: "Education",
-    educationSubtitle: "Where I picked up the fundamentals.",
-    contactTitle: "Contact",
-    contactSubtitle: "Best way to reach me.",
   },
   contact: {
     intro: "Happy to talk about engineering, product work, or interesting backend problems.",

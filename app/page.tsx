@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <>
       <HomeHero />
-      <SystemKnowledge />
       <ExperienceSection />
+      <SystemKnowledge />
       <EducationSection />
       <ContactSection />
     </>

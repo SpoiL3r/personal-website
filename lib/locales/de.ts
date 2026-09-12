@@ -15,7 +15,6 @@ export const de: Translations = {
       "Ich entwickle Java- und Spring-Boot-Services fur Enterprise-Produkte, zuletzt rund um APIs, Caching, Dokument-Workflows und Multi-Tenant-Datenflusse bei SAP.",
   },
   systemKnowledge: {
-    sectionLabel: "Tech Stack",
     coreLanguages: "Kernsprachen",
     distributedSystems: "Verteilte Systeme",
     data: "Daten",
@@ -28,13 +27,7 @@ export const de: Translations = {
     location: "Bengaluru, Indien",
   },
   sections: {
-    stackSubtitle: "Werkzeuge und Systeme, mit denen ich taglich arbeite.",
-    experienceTitle: "Ausgewahlte Erfahrung",
     experienceSubtitle: "Backend-Systeme, APIs und Plattformarbeit bei SAP, Daimler und GlobalLogic.",
-    educationTitle: "Ausbildung",
-    educationSubtitle: "Wo ich die Grundlagen gelernt habe.",
-    contactTitle: "Kontakt",
-    contactSubtitle: "Am besten per E-Mail erreichbar.",
   },
   contact: {
     intro: "Ich spreche gern uber Engineering, Produktarbeit oder interessante Backend-Probleme.",

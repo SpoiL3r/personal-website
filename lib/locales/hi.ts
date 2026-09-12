@@ -15,7 +15,6 @@ export const hi: Translations = {
       "मैं enterprise products के लिए Java और Spring Boot services बनाता हूँ. SAP में हाल का काम APIs, caching, document workflows और multi-tenant data flows पर रहा है।",
   },
   systemKnowledge: {
-    sectionLabel: "सिस्टम ज्ञान",
     coreLanguages: "मुख्य भाषाएँ",
     distributedSystems: "वितरित सिस्टम",
     data: "डेटा",
@@ -28,13 +27,7 @@ export const hi: Translations = {
     location: "बेंगलुरु, भारत",
   },
   sections: {
-    stackSubtitle: "जिन tools और systems के साथ मैं रोज़ काम करता हूँ।",
-    experienceTitle: "चयनित अनुभव",
     experienceSubtitle: "SAP, Daimler और GlobalLogic में backend systems, APIs और platform work।",
-    educationTitle: "शिक्षा",
-    educationSubtitle: "जहाँ से मैंने बुनियाद रखी।",
-    contactTitle: "संपर्क",
-    contactSubtitle: "संपर्क का सबसे अच्छा तरीका।",
   },
   contact: {
     intro: "इंजीनियरिंग, product work या किसी दिलचस्प backend problem पर बात करने में खुशी होगी।",

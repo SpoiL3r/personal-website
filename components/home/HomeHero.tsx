@@ -43,8 +43,6 @@ export default function HomeHero() {
             </Link>
           </div>
 
-          <hr className="hero-rule" />
-
           <p className="meta hero-status">
             <span className="dot" aria-hidden />
             {t.hero.availableBadge}

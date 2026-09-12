@@ -1,14 +1,18 @@
-"use client";
+import type { ReactNode } from "react";
 
-import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+type Rank = "primary" | "minor" | "close";
 
 interface Props {
   id: string;
-  label: string;
+  /**
+   * The only hierarchy control on the page. Sets the heading's column and
+   * size, the body's span, the section's air, and the weight of the rule it
+   * opens on. See the section rank block in globals.css.
+   */
+  rank: Rank;
   title: string;
   subtitle?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**
@@ -16,26 +20,17 @@ interface Props {
  *
  * The <section> element IS the 12-column grid: a wrapper div inside it would
  * become the only grid item and every `grid-column` placement below would stop
- * resolving, collapsing the page to a single column.
+ * resolving, collapsing the page to a single column. The h2 and the
+ * .section-body are therefore siblings, placed by rank.
  */
-export default function Section({ id, label, title, subtitle, children }: Props) {
-  const reduced = useReducedMotion();
-
+export default function Section({ id, rank, title, subtitle, children }: Props) {
   return (
-    <motion.section
-      id={id}
-      className="site-wrap section-grid"
-      initial={reduced ? false : { opacity: 0, y: 8 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: reduced ? 0 : 0.32, ease: [0.22, 0.61, 0.36, 1] }}
-    >
-      <p className="meta section-label">{label}</p>
+    <section id={id} className={`site-wrap section-grid section-${rank}`}>
+      <h2>{title}</h2>
       <div className="section-body">
-        <h2>{title}</h2>
         {subtitle && <p className="lead">{subtitle}</p>}
         {children}
       </div>
-    </motion.section>
+    </section>
   );
 }

@@ -10,35 +10,16 @@ export default function ContactSection() {
   const { t } = useLocale();
 
   return (
-    <Section
-      id="contact"
-      label={t.nav.contact}
-      title={t.sections.contactTitle}
-      subtitle={t.sections.contactSubtitle}
-    >
+    <Section id="contact" rank="close" title={t.nav.contact}>
       <div className="contact">
         <div className="contact-main">
-          <p className="lead" style={{ maxWidth: "44ch" }}>
-            {t.contact.intro}
-          </p>
-          <a
-            href={`mailto:${EMAIL}`}
-            className="btn btn-primary"
-            style={{ marginTop: "var(--s-32)" }}
-          >
+          <p className="lead">{t.contact.intro}</p>
+          <a href={`mailto:${EMAIL}`} className="btn btn-primary">
             {t.contact.emailMe}
           </a>
         </div>
 
         <dl className="contact-aside">
-          <div>
-            <dt className="meta">Email</dt>
-            <dd>
-              <a href={`mailto:${EMAIL}`} className="small link">
-                {EMAIL}
-              </a>
-            </dd>
-          </div>
           <div>
             <dt className="meta">{t.contact.locationLabel}</dt>
             <dd className="small">{t.contact.locationLine}</dd>

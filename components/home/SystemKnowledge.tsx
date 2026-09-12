@@ -8,12 +8,7 @@ export default function SystemKnowledge() {
   const { t } = useLocale();
 
   return (
-    <Section
-      id="stack"
-      label={t.nav.stack}
-      title={t.systemKnowledge.sectionLabel}
-      subtitle={t.sections.stackSubtitle}
-    >
+    <Section id="stack" rank="minor" title={t.nav.stack}>
       <dl className="sk">
         {CATEGORIES.map(({ labelKey, icon: CatIcon, items }) => (
           <div key={labelKey} className="sk-row">
