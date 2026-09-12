@@ -3,10 +3,9 @@ import type { Translations } from "./types";
 export const hi: Translations = {
   nav: {
     home: "होम",
-    about: "परिचय",
+    stack: "स्टैक",
     experience: "अनुभव",
     education: "शिक्षा",
-    offClock: "रुचियाँ",
     contact: "संपर्क",
   },
   hero: {
@@ -16,7 +15,6 @@ export const hi: Translations = {
       "मैं enterprise products के लिए Java और Spring Boot services बनाता हूँ. SAP में हाल का काम APIs, caching, document workflows और multi-tenant data flows पर रहा है।",
   },
   systemKnowledge: {
-    sectionLabel: "सिस्टम ज्ञान",
     coreLanguages: "मुख्य भाषाएँ",
     distributedSystems: "वितरित सिस्टम",
     data: "डेटा",
@@ -27,57 +25,14 @@ export const hi: Translations = {
   about: {
     fullName: "वैभव सिंह",
     location: "बेंगलुरु, भारत",
-    tagline: "भारत और जर्मनी में enterprise products पर 5+ साल काम कर चुका software engineer, जिसका फोकस ऐसे backend systems पर है जिन्हें production load में भरोसेमंद रहना चाहिए।",
-    bullet1:
-      "मेरे काम का बड़ा हिस्सा Java और Spring Boot services, data access layers, integration-heavy features, और बड़े enterprise tenants के लिए APIs पर रहा है।",
-    bullet2:
-      "हाल के काम में paginated retrieval paths, read-heavy flows के लिए caching, document generation, और tenant-aware replication या migration शामिल रहे हैं।",
-    bullet3:
-      "मैंने SAP Germany में 3 साल काम किया और अब बेंगलुरु से काम करता हूँ, जहाँ enterprise engineering discipline और pragmatic product delivery दोनों साथ आते हैं।",
-    bullet4:
-      "काम के बाहर मैं systems के बारे में पढ़ता हूँ, competitive games खेलता हूँ, और bugs को कभी-कभी जरूरत से ज्यादा देर तक पीछा करता हूँ।",
   },
   sections: {
-    aboutTitle: "परिचय",
-    aboutSubtitle: "प्रोफ़ाइल, engineering फोकस, और मुख्य tools।",
-    experienceTitle: "चयनित अनुभव",
     experienceSubtitle: "SAP, Daimler और GlobalLogic में backend systems, APIs और platform work।",
-    educationTitle: "शिक्षा",
-    educationSubtitle: "जहाँ से मैंने बुनियाद रखी।",
-    extracurricularTitle: "काम के बाहर",
-    extracurricularSubtitle: "engineering के अलावा कुछ चीज़ें।",
-    contactTitle: "संपर्क",
-    contactSubtitle: "संपर्क का सबसे अच्छा तरीका।",
-  },
-  extracurricular: {
-    gaming: "गेमिंग",
-    chess: "शतरंज",
-    offScreen: "स्क्रीन से दूर",
-    swimming: "तैराकी",
-    tableTennis: "टेबल टेनिस",
-    gym: "जिम",
-    badminton: "बैडमिंटन",
-    liveFromSteam: "Steam से लाइव",
-    updatedDaily: "रोज़ अपडेट होता है",
-    failedToLoadStats: "// stats लोड नहीं हो सके",
-    tierObsessed: "बहुत ज़्यादा",
-    tierDedicated: "समर्पित",
-    tierRegular: "नियमित",
-    tierCasual: "हल्का",
-    bullet: "बुलेट",
-    blitz: "ब्लिट्ज",
-    rapid: "रैपिड",
-    liveFromChess: "Lichess + Chess.com से लाइव",
-    updatedHourly: "हर घंटे अपडेट होता है",
-    favouriteOpenings: "पसंदीदा ओपनिंग्स",
-    asWhite: "सफ़ेद से",
-    asBlack: "काले से",
-    gamesSuffix: "गेम्स",
-    failedToLoad: "// लोड नहीं हो सका",
   },
   contact: {
     intro: "इंजीनियरिंग, product work या किसी दिलचस्प backend problem पर बात करने में खुशी होगी।",
     emailMe: "मुझे ईमेल करें",
+    locationLabel: "स्थान",
     locationLine: "बेंगलुरु, भारत - Remote / Hybrid के लिए खुला",
   },
   social: {
@@ -88,6 +43,7 @@ export const hi: Translations = {
     copyright: "वैभव सिंह",
     email: "ईमेल",
     builtWith: "Next.js और TypeScript के साथ बनाया गया।",
+    updated: "अपडेटेड",
   },
   locale: {
     selectLanguage: "भाषा चुनें",

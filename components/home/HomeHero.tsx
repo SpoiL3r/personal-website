@@ -1,79 +1,56 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import {
-  Mail,
-  MapPin,
-  Sparkles,
-} from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/contexts/LocaleContext";
-import styles from "./HomeHero.module.css";
 
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
-};
-
-const up = {
-  hidden: { opacity: 0, y: 28, filter: "blur(4px)" },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.7, ease: "easeOut" as const },
-  },
-};
+const EASE = [0.22, 0.61, 0.36, 1] as const;
 
 export default function HomeHero() {
   const { t } = useLocale();
+  const reduced = useReducedMotion();
 
-  const badges = [
-    { icon: Sparkles, text: t.hero.availableBadge },
-    { icon: MapPin, text: t.about.location },
-  ];
+  /** Three mount steps only: eyebrow, name, everything else. */
+  const step = (index: number) =>
+    reduced
+      ? {}
+      : {
+          initial: { opacity: 0, y: 8 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.32, delay: index * 0.06, ease: EASE },
+        };
 
   return (
-    <section className={`${styles.hero} home-hero`}>
-      <motion.div
-        variants={stagger}
-        initial="hidden"
-        animate="show"
-        className={styles.content}
-      >
-        <motion.div variants={up} className={styles.eyebrow}>
-          <span>{t.hero.subtitle}</span>
-        </motion.div>
+    <section id="home" className="site-wrap hero">
+      <motion.p className="meta hero-eyebrow" {...step(0)}>
+        {t.hero.subtitle}
+      </motion.p>
 
-        <motion.h1 variants={up} className={styles.title}>
+      <div className="hero-body">
+        <motion.h1 className="display" {...step(1)}>
           {t.about.fullName}
         </motion.h1>
 
-        <motion.p variants={up} className={styles.roleLine}>
-          {t.hero.roleLine}
-        </motion.p>
+        <motion.div {...step(2)}>
+          <p className="lead">{t.hero.roleLine}</p>
 
-        <motion.div variants={up} className={styles.actions}>
-          <Link href="/#experience" className="btn btn-primary">
-            {t.nav.experience}
-          </Link>
-          <Link href="/#contact" className="btn btn-outline">
-            <Mail size={15} />
-            {t.contact.emailMe}
-          </Link>
-        </motion.div>
+          <div className="hero-actions">
+            <Link href="/#experience" className="btn btn-primary">
+              {t.nav.experience}
+            </Link>
+            <Link href="/#contact" className="btn btn-outline">
+              {t.contact.emailMe}
+            </Link>
+          </div>
 
-        <motion.div className={`${styles.badges} hero-badges`} variants={up}>
-          {badges.map(({ icon: Icon, text }) => (
-            <span key={text} className={styles.badge}>
-              <span className={styles.badgeIcon}>
-                <Icon size={14} />
-              </span>
-              {text}
-            </span>
-          ))}
+          <p className="meta hero-status">
+            <span className="dot" aria-hidden />
+            {t.hero.availableBadge}
+            <span aria-hidden>{"·"}</span>
+            {t.about.location}
+          </p>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

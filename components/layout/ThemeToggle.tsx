@@ -19,7 +19,8 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        style={{ width: 36, height: 32, visibility: "hidden", flexShrink: 0 }}
+        className="icon-btn"
+        style={{ visibility: "hidden" }}
         aria-hidden
         tabIndex={-1}
       />
@@ -36,7 +37,7 @@ export default function ThemeToggle() {
     }, 200);
   }
 
-  function toggle(e: React.MouseEvent<HTMLButtonElement>) {
+  function toggle() {
     const next = isDark ? "light" : "dark";
     const doc = document as DocWithVT;
 
@@ -45,25 +46,15 @@ export default function ThemeToggle() {
       return;
     }
 
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y),
-    );
-
     const transition = doc.startViewTransition(() => applyTheme(next));
     transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ];
+      // One hard edge swept top to bottom: the page reprinted in a single
+      // pass, rather than the circle-from-the-button every site ships.
       document.documentElement.animate(
-        { clipPath },
+        { clipPath: ["inset(0 0 100% 0)", "inset(0 0 0 0)"] },
         {
-          duration: 520,
-          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          duration: 320, // --t-base
+          easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", // --ease
           pseudoElement: "::view-transition-new(root)",
         },
       );
@@ -75,9 +66,9 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label="Toggle theme"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="theme-toggle-btn"
+      className="icon-btn"
     >
-      {isDark ? <Sun size={16} /> : <Moon size={15} />}
+      {isDark ? <Sun size={16} strokeWidth={1.5} /> : <Moon size={16} strokeWidth={1.5} />}
     </button>
   );
 }

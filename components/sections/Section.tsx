@@ -1,64 +1,36 @@
-"use client";
+import type { ReactNode } from "react";
 
-import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+type Rank = "primary" | "minor" | "close";
 
 interface Props {
   id: string;
+  /**
+   * The only hierarchy control on the page. Sets the heading's column and
+   * size, the body's span, the section's air, and the weight of the rule it
+   * opens on. See the section rank block in globals.css.
+   */
+  rank: Rank;
   title: string;
   subtitle?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**
  * Section wrapper for the one-page layout.
  *
- * - Anchor target (`id`) for the navbar scroll-spy
- * - Reveals on scroll into view
- * - Clean title + optional subtitle (no kill-feed labels)
+ * The <section> element IS the 12-column grid: a wrapper div inside it would
+ * become the only grid item and every `grid-column` placement below would stop
+ * resolving, collapsing the page to a single column. The h2 and the
+ * .section-body are therefore siblings, placed by rank.
  */
-export default function Section({ id, title, subtitle, children }: Props) {
-  const reduced = useReducedMotion();
+export default function Section({ id, rank, title, subtitle, children }: Props) {
   return (
-    <section
-      id={id}
-      style={{
-        scrollMarginTop: "80px",
-        padding: "3.5rem 0 1.5rem",
-      }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: reduced ? 0 : 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: reduced ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] as const }}
-      >
-        <h2
-          style={{
-            fontSize: "clamp(1.6rem, 3.5vw, 2.2rem)",
-            fontWeight: 800,
-            letterSpacing: "-0.035em",
-            margin: "0 0 0.5rem",
-            color: "var(--text)",
-          }}
-        >
-          {title}
-        </h2>
-        {subtitle && (
-          <p
-            style={{
-              fontSize: "0.88rem",
-              color: "var(--text-dim)",
-              margin: "0 0 1.75rem",
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {subtitle}
-          </p>
-        )}
-
+    <section id={id} className={`site-wrap section-grid section-${rank}`}>
+      <h2>{title}</h2>
+      <div className="section-body">
+        {subtitle && <p className="lead">{subtitle}</p>}
         {children}
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -3,10 +3,9 @@ import type { Translations } from "./types";
 export const en: Translations = {
   nav: {
     home: "Home",
-    about: "About",
+    stack: "Stack",
     experience: "Experience",
     education: "Education",
-    offClock: "Interests",
     contact: "Contact",
   },
   hero: {
@@ -16,7 +15,6 @@ export const en: Translations = {
       "I build Java and Spring Boot services for enterprise products, with recent work across APIs, caching, document workflows, and multi-tenant data flows at SAP.",
   },
   systemKnowledge: {
-    sectionLabel: "System Knowledge",
     coreLanguages: "Core Languages",
     distributedSystems: "Distributed Systems",
     data: "Data",
@@ -27,57 +25,14 @@ export const en: Translations = {
   about: {
     fullName: "Vaibhav Singh",
     location: "Bengaluru, India",
-    tagline: "Software engineer with 5+ years across enterprise products in India and Germany, focused on backend systems that need to stay reliable under real production load.",
-    bullet1:
-      "Most of my work sits in Java and Spring Boot services, data access layers, integration-heavy features, and APIs used by large enterprise tenants.",
-    bullet2:
-      "Recent projects have included paginated retrieval paths, caching for read-heavy flows, document generation, and tenant-aware replication or migration work.",
-    bullet3:
-      "I spent 3 years in Germany at SAP and now work from Bengaluru, bringing a mix of enterprise engineering discipline and pragmatic product delivery.",
-    bullet4:
-      "Outside work I read about systems, play competitive games, and still enjoy tracing a bug further than strictly necessary.",
   },
   sections: {
-    aboutTitle: "About",
-    aboutSubtitle: "Profile, engineering focus, and tools I reach for most.",
-    experienceTitle: "Selected Experience",
     experienceSubtitle: "Backend systems, APIs, and platform work across SAP, Daimler, and GlobalLogic.",
-    educationTitle: "Education",
-    educationSubtitle: "Where I picked up the fundamentals.",
-    extracurricularTitle: "Outside Work",
-    extracurricularSubtitle: "A few things beyond engineering.",
-    contactTitle: "Contact",
-    contactSubtitle: "Best way to reach me.",
-  },
-  extracurricular: {
-    gaming: "Gaming",
-    chess: "Chess",
-    offScreen: "Off-Screen",
-    swimming: "Swimming",
-    tableTennis: "Table Tennis",
-    gym: "Gym",
-    badminton: "Badminton",
-    liveFromSteam: "Live from Steam",
-    updatedDaily: "updated daily",
-    failedToLoadStats: "// failed to load stats",
-    tierObsessed: "OBSESSED",
-    tierDedicated: "DEDICATED",
-    tierRegular: "REGULAR",
-    tierCasual: "CASUAL",
-    bullet: "Bullet",
-    blitz: "Blitz",
-    rapid: "Rapid",
-    liveFromChess: "Live from Lichess + Chess.com",
-    updatedHourly: "updated hourly",
-    favouriteOpenings: "Favourite openings",
-    asWhite: "As white",
-    asBlack: "As black",
-    gamesSuffix: "games",
-    failedToLoad: "// failed to load",
   },
   contact: {
     intro: "Happy to talk about engineering, product work, or interesting backend problems.",
     emailMe: "Email me",
+    locationLabel: "Location",
     locationLine: "Bengaluru, India - Open to remote / hybrid",
   },
   social: {
@@ -88,6 +43,7 @@ export const en: Translations = {
     copyright: "Vaibhav Singh",
     email: "Email",
     builtWith: "Built with Next.js and TypeScript.",
+    updated: "Updated",
   },
   locale: {
     selectLanguage: "Select language",

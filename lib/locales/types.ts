@@ -11,10 +11,9 @@
 export interface Translations {
   nav: {
     home: string;
-    about: string;
+    stack: string;
     experience: string;
     education: string;
-    offClock: string;
     contact: string;
   };
   hero: {
@@ -23,7 +22,6 @@ export interface Translations {
     roleLine: string;
   };
   systemKnowledge: {
-    sectionLabel: string;
     coreLanguages: string;
     distributedSystems: string;
     data: string;
@@ -34,53 +32,14 @@ export interface Translations {
   about: {
     fullName: string;
     location: string;
-    tagline: string;
-    bullet1: string;
-    bullet2: string;
-    bullet3: string;
-    bullet4: string;
   };
   sections: {
-    aboutTitle: string;
-    aboutSubtitle: string;
-    experienceTitle: string;
     experienceSubtitle: string;
-    educationTitle: string;
-    educationSubtitle: string;
-    extracurricularTitle: string;
-    extracurricularSubtitle: string;
-    contactTitle: string;
-    contactSubtitle: string;
-  };
-  extracurricular: {
-    gaming: string;
-    chess: string;
-    offScreen: string;
-    swimming: string;
-    tableTennis: string;
-    gym: string;
-    badminton: string;
-    liveFromSteam: string;
-    updatedDaily: string;
-    failedToLoadStats: string;
-    tierObsessed: string;
-    tierDedicated: string;
-    tierRegular: string;
-    tierCasual: string;
-    bullet: string;
-    blitz: string;
-    rapid: string;
-    liveFromChess: string;
-    updatedHourly: string;
-    favouriteOpenings: string;
-    asWhite: string;
-    asBlack: string;
-    gamesSuffix: string;
-    failedToLoad: string;
   };
   contact: {
     intro: string;
     emailMe: string;
+    locationLabel: string;
     locationLine: string;
   };
   social: {
@@ -91,6 +50,7 @@ export interface Translations {
     copyright: string;
     email: string;
     builtWith: string;
+    updated: string;
   };
   locale: {
     selectLanguage: string;

@@ -3,10 +3,9 @@ import type { Translations } from "./types";
 export const de: Translations = {
   nav: {
     home: "Start",
-    about: "Uber mich",
+    stack: "Stack",
     experience: "Erfahrung",
     education: "Ausbildung",
-    offClock: "Interessen",
     contact: "Kontakt",
   },
   hero: {
@@ -16,7 +15,6 @@ export const de: Translations = {
       "Ich entwickle Java- und Spring-Boot-Services fur Enterprise-Produkte, zuletzt rund um APIs, Caching, Dokument-Workflows und Multi-Tenant-Datenflusse bei SAP.",
   },
   systemKnowledge: {
-    sectionLabel: "Tech Stack",
     coreLanguages: "Kernsprachen",
     distributedSystems: "Verteilte Systeme",
     data: "Daten",
@@ -27,57 +25,14 @@ export const de: Translations = {
   about: {
     fullName: "Vaibhav Singh",
     location: "Bengaluru, Indien",
-    tagline: "Software Engineer mit 5+ Jahren Erfahrung in Enterprise-Produkten in Indien und Deutschland, mit Fokus auf Backend-Systeme, die unter realer Production-Last zuverlassig bleiben mussen.",
-    bullet1:
-      "Der Schwerpunkt meiner Arbeit liegt bei Java- und Spring-Boot-Services, Datenzugriffsschichten, integrationslastigen Features und APIs fur grosse Enterprise-Tenants.",
-    bullet2:
-      "Zuletzt habe ich unter anderem an paginierten Retrieval-Pfaden, Caching fur leselastige Flows, Dokumentgenerierung sowie tenant-spezifischer Replikation und Migration gearbeitet.",
-    bullet3:
-      "Ich habe 3 Jahre bei SAP in Deutschland gearbeitet und bin heute in Bengaluru tatig, mit einer Mischung aus Enterprise-Disziplin und pragmatischer Produktlieferung.",
-    bullet4:
-      "Ausserhalb der Arbeit lese ich uber Systeme, spiele kompetitive Games und verfolge Bugs gelegentlich weiter, als es unbedingt notig ware.",
   },
   sections: {
-    aboutTitle: "Uber mich",
-    aboutSubtitle: "Profil, Engineering-Fokus und bevorzugte Tools.",
-    experienceTitle: "Ausgewahlte Erfahrung",
     experienceSubtitle: "Backend-Systeme, APIs und Plattformarbeit bei SAP, Daimler und GlobalLogic.",
-    educationTitle: "Ausbildung",
-    educationSubtitle: "Wo ich die Grundlagen gelernt habe.",
-    extracurricularTitle: "Ausserhalb der Arbeit",
-    extracurricularSubtitle: "Ein paar Dinge neben Engineering.",
-    contactTitle: "Kontakt",
-    contactSubtitle: "Am besten per E-Mail erreichbar.",
-  },
-  extracurricular: {
-    gaming: "Gaming",
-    chess: "Schach",
-    offScreen: "Abseits vom Screen",
-    swimming: "Schwimmen",
-    tableTennis: "Tischtennis",
-    gym: "Fitnessstudio",
-    badminton: "Badminton",
-    liveFromSteam: "Live von Steam",
-    updatedDaily: "taglich aktualisiert",
-    failedToLoadStats: "// stats konnten nicht geladen werden",
-    tierObsessed: "BESESSEN",
-    tierDedicated: "SEHR AKTIV",
-    tierRegular: "REGELMASSIG",
-    tierCasual: "CASUAL",
-    bullet: "Bullet",
-    blitz: "Blitz",
-    rapid: "Rapid",
-    liveFromChess: "Live von Lichess + Chess.com",
-    updatedHourly: "stundlich aktualisiert",
-    favouriteOpenings: "Lieblings-Eroffnungen",
-    asWhite: "Als Weiss",
-    asBlack: "Als Schwarz",
-    gamesSuffix: "Partien",
-    failedToLoad: "// konnte nicht geladen werden",
   },
   contact: {
     intro: "Ich spreche gern uber Engineering, Produktarbeit oder interessante Backend-Probleme.",
     emailMe: "Schreib mir",
+    locationLabel: "Standort",
     locationLine: "Bengaluru, Indien - offen fur Remote / Hybrid",
   },
   social: {
@@ -88,6 +43,7 @@ export const de: Translations = {
     copyright: "Vaibhav Singh",
     email: "E-Mail",
     builtWith: "Gebaut mit Next.js und TypeScript.",
+    updated: "Aktualisiert",
   },
   locale: {
     selectLanguage: "Sprache wahlen",
